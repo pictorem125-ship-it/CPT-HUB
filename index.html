@@ -57,6 +57,53 @@ button{font:inherit;cursor:pointer}
 .empty-shell .construction-label{position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);z-index:5;background:#111b20e8;border:2px dashed #d3a52d;border-radius:5px;padding:7px 14px;color:#ffe08a;font-size:12px;font-weight:900;letter-spacing:.4px;text-align:center}
 .empty-shell .construction-label small{display:block;color:#aeb9bd;font-size:9px;font-weight:600;margin-top:3px}
 @media(max-width:600px){.empty-shell .construction-label{font-size:10px;padding:6px 9px}.empty-shell .baynum{font-size:8px;padding:1px 5px}.empty-shell .arrow{font-size:23px}}
+</style><style id="warehouse-reference-style">
+/* Reference-inspired SPT HUB warehouse shell: industrial pixel-art, empty build floor */
+.refwh{position:absolute;inset:0;overflow:hidden;background:#26343a;image-rendering:pixelated}
+.refwh .sky{position:absolute;inset:0 0 78%;background:linear-gradient(#1a252a,#2f3d42 55%,#435056)}
+.refwh .roof{position:absolute;left:0;right:0;top:0;height:17%;background:
+ repeating-linear-gradient(90deg,#172126 0 44px,#334047 45px 48px),
+ linear-gradient(#202c31,#46535a);border-bottom:4px solid #151d20;box-shadow:inset 0 -7px #718087}
+.refwh .roofbeam{position:absolute;top:0;height:17%;width:7px;background:#11191d;box-shadow:1px 0 #69767b}
+.refwh .dockrow{position:absolute;left:2.8%;right:2.8%;top:2.8%;height:14%;display:grid;grid-template-columns:repeat(6,1fr);gap:1.1%;z-index:4}
+.refwh .dock{position:relative;border:2px solid #10171b;background:linear-gradient(110deg,#69757a,#2c383d 52%,#59656a);box-shadow:inset 0 0 0 2px #9ba3a5,inset 0 -9px #1a2226,3px 4px 0 #101517}
+.refwh .dock:before{content:"";position:absolute;left:8%;right:8%;bottom:4%;height:72%;background:repeating-linear-gradient(0deg,#465157 0 5px,#313b40 5px 8px);border:2px solid #141b1f}
+.refwh .dock:after{content:"";position:absolute;left:12%;right:12%;bottom:-4px;height:8px;background:#1d272c;border:2px solid #7c888d}
+.refwh .docknum{position:absolute;top:-2px;left:50%;transform:translateX(-50%);background:#10191d;color:#fff;border:1px solid #8d999d;padding:1px 8px;font-size:10px;font-weight:900;z-index:5}
+.refwh .docklamp{position:absolute;left:50%;bottom:20%;width:7px;height:7px;transform:translateX(-50%);background:#ffe08a;box-shadow:0 0 13px 4px #ffd56a99;z-index:6}
+.refwh .facade{position:absolute;left:0;right:0;top:16%;height:9%;background:linear-gradient(#334146,#202b30);border-top:3px solid #11191d;border-bottom:3px solid #11191d;z-index:2}
+.refwh .logo{position:absolute;right:12%;top:18%;padding:6px 16px;background:#10191d;color:#f4f6f7;border:2px solid #55656c;font-weight:900;font-size:18px;letter-spacing:1px;box-shadow:3px 3px 0 #101416;z-index:7}
+.refwh .logo span{color:#ff9c22}
+.refwh .floor{position:absolute;left:4%;right:4%;top:25%;bottom:13%;background:
+ linear-gradient(rgba(255,255,255,.20) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(255,255,255,.20) 1px,transparent 1px),
+ linear-gradient(#777d80,#6d7477);
+background-size:5% 8%;border:3px solid #202a2e;box-shadow:inset 0 0 0 2px #a1a7a9;z-index:1}
+.refwh .floor:before{content:"";position:absolute;inset:0;background:
+ radial-gradient(ellipse at 22% 31%,#30393d55 0 2%,transparent 3%),
+ radial-gradient(ellipse at 71% 67%,#30393d44 0 2%,transparent 3%),
+ radial-gradient(ellipse at 51% 43%,#30393d55 0 1.5%,transparent 2%);
+opacity:.8}
+.refwh .yellow-frame{position:absolute;left:5%;right:5%;top:28%;height:70%;border:5px solid #e9aa20;border-bottom-width:6px;z-index:2;pointer-events:none}
+.refwh .yellow-frame:after{content:"";position:absolute;inset:-4px;background:repeating-linear-gradient(90deg,transparent 0 28px,#e9aa20 29px 39px,transparent 40px 62px);opacity:.95;mask:linear-gradient(#000 0 6px,transparent 6px calc(100% - 6px),#000 calc(100% - 6px));}
+.refwh .walk{position:absolute;z-index:3;color:#f5f5f2;font-size:26px;text-shadow:2px 2px #5a6062}
+.refwh .lane{position:absolute;height:5px;background:repeating-linear-gradient(90deg,#eeb11e 0 18px,transparent 18px 33px);z-index:3}
+.refwh .lane.v{width:5px;height:auto;background:repeating-linear-gradient(0deg,#eeb11e 0 18px,transparent 18px 33px)}
+.refwh .safety{position:absolute;z-index:4;width:32px;height:30px;background:repeating-linear-gradient(90deg,#f0b321 0 7px,#242b2f 7px 13px);border:2px solid #13191c}
+.refwh .forklift{position:absolute;z-index:5;font-size:28px;filter:drop-shadow(2px 3px #222);opacity:.95}
+.refwh .side{position:absolute;top:24%;bottom:12%;width:4%;background:linear-gradient(90deg,#172126,#455157,#202a2e);border:2px solid #11191d;z-index:5}
+.refwh .side.left{left:0}.refwh .side.right{right:0}
+.refwh .side .machine{position:absolute;left:18%;right:18%;height:9%;background:#26343a;border:2px solid #0e1518;margin-top:12%;box-shadow:inset 0 0 0 2px #526067}
+.refwh .bottom{position:absolute;left:0;right:0;bottom:0;height:13%;background:linear-gradient(#344148,#1e282d);border-top:4px solid #11191d;z-index:6}
+.refwh .roomrow{position:absolute;left:3%;right:3%;top:10%;bottom:8%;display:grid;grid-template-columns:1.3fr 1fr 1.3fr 1fr 1.2fr;gap:1%}
+.refwh .room{position:relative;background:linear-gradient(#4a565b,#273238);border:2px solid #11191d;box-shadow:inset 0 0 0 2px #758086}
+.refwh .room:after{content:"";position:absolute;left:14%;right:14%;top:27%;height:37%;background:#1a252a;border:2px solid #7c878b;box-shadow:inset 0 0 0 3px #303b40}
+.refwh .roomtag{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);background:#0e171b;color:#fff;border:1px solid #6d7b81;padding:1px 7px;font-size:8px;font-weight:900;z-index:3;white-space:nowrap}
+.refwh .bottomdoor{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);width:6%;height:18%;background:#1b2529;border:2px solid #8b969a;z-index:8}
+.refwh .lightbar{position:absolute;z-index:5;width:4px;height:30px;background:#ffe38b;box-shadow:0 0 12px 3px #ffd56a88}
+.refwh .label{position:absolute;left:50%;top:53%;transform:translate(-50%,-50%);z-index:9;padding:7px 14px;background:#101a1ee8;border:2px dashed #e2aa22;color:#ffd66d;font-size:11px;font-weight:900;text-align:center;letter-spacing:.4px;box-shadow:3px 3px 0 #0008}
+.refwh .label small{display:block;color:#b9c1c4;font-size:8px;margin-top:3px;font-weight:700}
+@media(max-width:600px){.refwh .logo{font-size:11px;padding:4px 8px}.refwh .docknum{font-size:7px;padding:1px 4px}.refwh .walk{font-size:19px}.refwh .forklift{font-size:21px}.refwh .label{font-size:9px;padding:5px 8px}}
 </style></head>
 <body>
 <div class="app">
@@ -185,30 +232,34 @@ function renderDock(){
 }
 function zoneClass(id){const z=ZONES.find(x=>x.id===id);return z?z.color:''}
 function renderWarehouse(){
- const w=document.getElementById('warehouse'); if(!w)return;
+ const w=document.getElementById('warehouse');if(!w)return;
  w.innerHTML=`
-  <div class="empty-shell">
-   <div class="roofline"></div>
-   <div class="wall"></div>
-   <div class="bay-row">${[1,2,3,4,5,6].map(n=>'<div class="bay"><span class="baynum">0'+n+'</span></div>').join('')}</div>
-   <div class="light" style="left:10%"></div><div class="light" style="left:27%"></div><div class="light" style="left:44%"></div><div class="light" style="left:61%"></div><div class="light" style="left:78%"></div>
-   <div class="floor"></div>
-   <div class="lane" style="left:8%;right:8%;top:25%"></div>
-   <div class="lane" style="left:8%;right:8%;top:76%"></div>
-   <div class="lane v" style="left:8%;top:25%;bottom:13%"></div>
-   <div class="lane v" style="right:8%;top:25%;bottom:13%"></div>
-   <div class="cross" style="left:4%;top:73%"></div><div class="cross" style="right:4%;top:73%"></div>
-   <div class="arrow" style="left:5%;top:43%">↑</div><div class="arrow" style="right:5%;top:43%">↓</div>
-   <div class="door" style="left:13%"><span>STAFF</span></div>
-   <div class="door" style="left:29%"><span>OFFICE</span></div>
-   <div class="door" style="left:45%"><span>CONTROL</span></div>
-   <div class="door" style="left:61%"><span>MAINT</span></div>
-   <div class="door" style="left:77%"><span>EXIT</span></div>
-   <div class="bottomwall"></div>
-   <div class="safety" style="left:2%;top:30%"></div><div class="safety" style="right:2%;top:30%"></div>
-   <div class="side-light" style="left:1%;top:51%"></div><div class="side-light" style="right:1%;top:51%"></div>
-   <div class="construction-label">EMPTY HUB • BUILD AREA<small>Выбери «Строить» и размещай блоки на свободном полу</small></div>
-  </div>`;
+ <div class="refwh">
+  <div class="sky"></div><div class="roof"></div>
+  <div class="roofbeam" style="left:9%"></div><div class="roofbeam" style="left:25%"></div><div class="roofbeam" style="left:42%"></div><div class="roofbeam" style="left:58%"></div><div class="roofbeam" style="left:75%"></div><div class="roofbeam" style="left:91%"></div>
+  <div class="dockrow">${[1,2,3,4,5,6].map(n=>'<div class="dock"><span class="docknum">0'+n+'</span><i class="docklamp"></i></div>').join('')}</div>
+  <div class="facade"></div><div class="logo">SPT <span>HUB</span></div>
+  <div class="floor"></div><div class="yellow-frame"></div>
+  <div class="lane" style="left:7%;right:7%;top:29%"></div><div class="lane" style="left:7%;right:7%;top:93%"></div>
+  <div class="lane v" style="left:7%;top:29%;bottom:13%"></div><div class="lane v" style="right:7%;top:29%;bottom:13%"></div>
+  <div class="walk" style="left:5%;top:34%">♙</div><div class="walk" style="left:5%;top:65%">♙</div><div class="walk" style="right:4%;top:42%">♙</div>
+  <div class="safety" style="left:3.2%;top:78%"></div><div class="safety" style="right:3.2%;top:78%"></div>
+  <div class="forklift" style="left:1.5%;top:70%">🚜</div><div class="forklift" style="right:1.5%;top:57%">🚜</div>
+  <div class="side left"><div class="machine" style="top:4%"></div><div class="machine" style="top:27%"></div><div class="machine" style="top:51%"></div><div class="machine" style="top:75%"></div></div>
+  <div class="side right"><div class="machine" style="top:4%"></div><div class="machine" style="top:27%"></div><div class="machine" style="top:51%"></div><div class="machine" style="top:75%"></div></div>
+  <div class="lightbar" style="left:20%;top:29%"></div><div class="lightbar" style="left:37%;top:29%"></div><div class="lightbar" style="left:54%;top:29%"></div><div class="lightbar" style="left:71%;top:29%"></div><div class="lightbar" style="left:88%;top:29%"></div>
+  <div class="bottom">
+   <div class="roomrow">
+    <div class="room"><span class="roomtag">STAFF</span></div>
+    <div class="room"><span class="roomtag">OFFICE</span></div>
+    <div class="room"><span class="roomtag">CONTROL</span></div>
+    <div class="room"><span class="roomtag">MAINT</span></div>
+    <div class="room"><span class="roomtag">STORAGE</span></div>
+   </div>
+   <div class="bottomdoor"></div>
+  </div>
+  <div class="label">EMPTY HUB • BUILD AREA<small>Свободная площадь — здесь будет твой склад</small></div>
+ </div>`;
 }
 function addZone(parent,id,name,x,y,w,h,color){
  const e=document.createElement('div');e.className='zone '+color;e.style.left=x+'%';e.style.top=y+'%';e.style.width=w+'%';e.style.height=h+'%';
