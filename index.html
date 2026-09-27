@@ -1,289 +1,258 @@
-<!doctype html><html lang="ru"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#08111a"><title>SPT HUB</title>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SPT HUB</title>
 <style>
 *{box-sizing:border-box}
-:root{
-  --bg:#070d14;--panel:#0d1621;--panel2:#111d2a;--line:#26394a;--text:#edf4fa;--muted:#8195a8;
-  --blue:#25a8ff;--green:#27e58b;--yellow:#ffc21a;--orange:#ff8b24;--purple:#b84cff;--red:#ff4545;
-}
-body{margin:0;background:radial-gradient(circle at 50% -10%,#15283a 0,#070d14 45%);color:var(--text);font:13px/1.35 system-ui,-apple-system,Segoe UI,sans-serif}
+:root{--bg:#070e15;--panel:#0e1a26;--line:#294052;--text:#edf5fa;--muted:#8095a8;--blue:#24a9ff;--green:#27e58b;--yellow:#ffc21b;--orange:#ff8a24;--purple:#b94dff;--red:#ff4848}
+body{margin:0;background:#070e15;color:var(--text);font:13px Arial,sans-serif}
 button{font:inherit;cursor:pointer}
 .app{max-width:1500px;margin:auto;padding:8px}
-.top{display:grid;grid-template-columns:1.45fr .9fr .9fr 1fr 1.15fr 58px;gap:7px}
-.card,.panel,.nav,.side,.modal{background:linear-gradient(180deg,#111d29,#0b141e);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 28px #0008}
-.card{padding:8px;min-height:65px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:48px;height:48px;display:grid;place-items:center;background:#182635;border:1px solid #38536a;border-radius:8px;font-size:27px;image-rendering:pixelated}
-.title{font-size:21px;font-weight:950;letter-spacing:.4px}.muted{color:var(--muted);font-size:10px}.value{font-weight:950;font-size:17px}
-.orange{color:var(--orange)}.cyan{color:var(--blue)}.green{color:var(--green)}.yellow{color:var(--yellow)}
-.progress{height:7px;background:#050a0f;border:1px solid #1d2d3b;border-radius:3px;overflow:hidden;margin-top:4px}.bar{height:100%;background:linear-gradient(90deg,#ff8b24,#ffc21a)}
-.test-card{border-color:#00e68a;box-shadow:0 0 0 1px #00e68a22,0 8px 28px #0008}.test-title{color:#00ef91;font-weight:950}
-.speed{display:flex;align-items:center;justify-content:space-between;gap:4px}.speed button{background:#113e31;border:1px solid #167957;color:#aaffd8;border-radius:6px;padding:6px 8px;font-weight:900}.gear{font-size:21px;text-align:center;padding-top:18px}
-.main{display:grid;grid-template-columns:170px 1fr 225px;gap:7px;margin-top:7px}
-.nav{padding:6px;display:flex;flex-direction:column;gap:5px}.nav button{background:#101e2b;color:#bdd0df;border:1px solid #203344;border-radius:7px;padding:11px;text-align:left;font-weight:800}.nav button:hover{border-color:#3e8dbd;background:#14283a;color:#fff}.nav button:first-child{background:#7b3f0b;border-color:#d67819;color:#fff}
-.warehouse-wrap{padding:6px}.warehouse{position:relative;aspect-ratio:16/10;background:#1b252b;overflow:hidden;border-radius:6px;border:1px solid #43515a;image-rendering:pixelated;
-background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px),repeating-linear-gradient(0deg,transparent 0 18px,#0b1115 19px 20px);
-background-size:24px 24px,24px 24px,100% 20px}
-.warehouse:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0007 0 2%,transparent 2% 98%,#0007),linear-gradient(#0005 0 2%,transparent 2% 98%,#0006);pointer-events:none}
-.zone{position:absolute;border:2px solid #64737d;background:linear-gradient(135deg,#344149,#202a30);border-radius:4px;overflow:hidden;box-shadow:inset 0 0 0 2px #0004,0 4px 10px #0008}
-.zone.blue{border-color:#238fe0;background:linear-gradient(135deg,#183b57,#142b3c)}.zone.greenz{border-color:#24d77f;background:linear-gradient(135deg,#164b36,#17352d)}
-.zone.yellowz{border-color:#f0b915;background:linear-gradient(135deg,#55420e,#382f13)}.zone.orangez{border-color:#ff8624;background:linear-gradient(135deg,#563016,#392316)}
-.zone.purplez{border-color:#b64cff;background:linear-gradient(135deg,#43205d,#2c193e)}.zone.redz{border-color:#ff4545;background:linear-gradient(135deg,#551c22,#36171b)}
-.zt{position:absolute;top:4px;left:50%;transform:translateX(-50%);background:#05090ddd;border:1px solid currentColor;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:950;white-space:nowrap;z-index:3}
-.blue .zt{color:#41b9ff}.greenz .zt{color:#44f49a}.yellowz .zt{color:#ffd52b}.orangez .zt{color:#ff9d4c}.purplez .zt{color:#d08aff}.redz .zt{color:#ff6a6a}
-.box,.worker,.fork{position:absolute;font-size:18px;filter:drop-shadow(2px 2px 0 #0008);z-index:2}.box{animation:f 2s steps(2) infinite}.worker{animation:w 4s steps(4) infinite}.fork{animation:d 6s steps(5) infinite}@keyframes f{50%{transform:translateY(-2px)}}@keyframes w{50%{transform:translateX(9px)}}@keyframes d{50%{transform:translateX(25px)}}
-.conv{position:absolute;height:9px;background:#202d35;border:2px solid #5d6b73;border-radius:2px;box-shadow:inset 0 0 0 2px #111,0 2px 4px #0008;z-index:1}
-.conv.bluec{border-color:#249fe8}.conv.yellowc{border-color:#e8ad16}.conv.purplec{border-color:#ae48ff}.conv.redc{border-color:#f14545}
-.mini-sign{position:absolute;padding:3px 8px;background:#05090de8;border:2px solid #ddd;border-radius:3px;font-size:11px;font-weight:950;z-index:4;box-shadow:2px 2px 0 #0009}
-.side{padding:9px}.side h4{margin:0 0 7px;font-size:11px;color:#9fb2c2;letter-spacing:.5px}.stat{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff0d}.side .progress{margin:8px 0 13px}.eff-row{display:grid;grid-template-columns:60px 1fr 34px;gap:6px;align-items:center;margin:7px 0;font-size:11px}.effbar{height:7px;background:#071019;border-radius:3px;overflow:hidden}.effbar i{display:block;height:100%;border-radius:3px}
-.bottom{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:7px;margin-top:7px}.panel{padding:11px}.panel b{font-size:13px}.btn{background:#142a3d;color:#dbe8f2;border:1px solid #31536b;padding:8px 11px;border-radius:6px;font-weight:850}.btn:hover{filter:brightness(1.18)}.primary{background:#e98420;color:#160c03;border-color:#ffae4e}.greenbtn{background:#125b43;border-color:#27a978}.danger{background:#67202a;border-color:#a83243}
-.buildbar{display:flex;gap:5px;overflow:auto;padding:7px;background:#09111a;border:1px solid #253847;border-radius:8px}.buildtile{min-width:120px;background:#101d29;border:1px solid #2b4153;border-radius:6px;padding:8px;text-align:center}.buildtile .ico{font-size:24px;display:block}.buildtile strong{display:block;color:#ffc21a;margin-top:4px}
-.modalbg{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:10px;z-index:20}.modalbg.open{display:flex}.modal{width:min(940px,100%);max-height:90vh;overflow:auto;padding:12px}.head{display:flex;justify-content:space-between;align-items:center}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px}.tile{background:#0f1e2b;border:1px solid #29465b;border-radius:7px;padding:10px}.tile b{display:block;margin-bottom:3px}.tile strong{display:block;margin-top:7px}.tile button{width:100%;margin-top:7px}.toast{position:fixed;right:12px;bottom:12px;background:#102a3a;border:1px solid #2d718f;padding:9px 13px;border-radius:7px;opacity:0;transition:.2s;z-index:30}.toast.show{opacity:1}
-.test-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.test-actions .btn{font-size:11px}
-@media(max-width:1050px){.top{grid-template-columns:1.4fr 1fr 1fr 1fr}.top .speed-card{grid-column:span 2}.gear{display:none}.main{grid-template-columns:150px 1fr 200px}}
-@media(max-width:900px){.top{grid-template-columns:1fr 1fr}.brand{grid-column:1/-1}.main{grid-template-columns:1fr}.nav{display:grid;grid-template-columns:repeat(6,1fr)}.nav button{text-align:center;font-size:10px;padding:8px 3px}.bottom{grid-template-columns:1fr 1fr}.side{display:grid;grid-template-columns:1fr 1fr;gap:8px}}
-@media(max-width:600px){.app{padding:4px}.top{gap:5px}.card{min-height:56px;padding:7px}.title{font-size:17px}.value{font-size:15px}.nav{position:sticky;top:0;z-index:15;grid-template-columns:repeat(3,1fr);padding:4px}.nav button{padding:7px 2px;font-size:10px}.warehouse{aspect-ratio:1/1}.bottom{grid-template-columns:1fr}.side{grid-template-columns:1fr}.box,.worker,.fork{font-size:14px}.zt{font-size:7px;padding:2px 5px}.test-actions{grid-template-columns:1fr 1fr}}
-<style>
-.editor-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;background:#071018;border:1px solid #30495a;padding:6px;border-radius:8px;min-height:420px}
-.editor-cell{min-height:42px;border:1px dashed #263b4a;border-radius:3px;background:#0a141d;position:relative}
-.editor-cell.over{background:#17364a;border-color:#38bfff}
-.editor-block{width:100%;height:100%;min-height:42px;border:2px solid #5d6b73;border-radius:4px;background:#1d2a32;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:900;cursor:grab;user-select:none;box-shadow:inset 0 0 0 2px #0005}
-.editor-block:active{cursor:grabbing}
-.editor-block.blue{background:#123b57;border-color:#25a8ff}.editor-block.green{background:#124b36;border-color:#27e58b}.editor-block.yellow{background:#4a3a0d;border-color:#ffc21a}.editor-block.orange{background:#4b2b13;border-color:#ff8b24}.editor-block.purple{background:#3b1952;border-color:#b84cff}.editor-block.red{background:#4d171d;border-color:#ff4545}
-.palette{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-top:8px}.palette-item{padding:8px;background:#101d29;border:1px solid #29465b;border-radius:6px;text-align:center;cursor:grab}.palette-item:hover{border-color:#35c7ff}.editor-help{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px}.editor-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
-@media(max-width:600px){.editor-grid{grid-template-columns:repeat(6,1fr);min-height:360px}.editor-cell{min-height:48px}}
-</style></style></head><body>
+.top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.15fr 55px;gap:7px}
+.card,.panel,.nav,.side,.modal{background:linear-gradient(#12202d,#0b151f);border:1px solid var(--line);border-radius:9px;box-shadow:0 8px 25px #0008}
+.card{padding:8px;min-height:64px}.brand{display:flex;align-items:center;gap:9px}.logo{font-size:30px;background:#172838;border:1px solid #38536a;border-radius:7px;padding:6px}.title{font-size:21px;font-weight:900}.muted{color:var(--muted);font-size:10px}.value{font-size:17px;font-weight:900}.orange{color:var(--orange)}.green{color:var(--green)}.yellow{color:var(--yellow)}.cyan{color:var(--blue)}
+.test{border-color:#00d982}.test b{color:#00ef91}.barbg{height:7px;background:#050a0f;border-radius:3px;overflow:hidden;margin-top:5px}.bar{height:100%;background:linear-gradient(90deg,#ff8b24,#ffc21b)}
+.speed{display:flex;justify-content:space-between;align-items:center}.speed button{background:#124b38;color:#9dffd1;border:1px solid #26a876;border-radius:6px;padding:6px 9px;font-weight:900}.gear{text-align:center;font-size:21px;padding-top:18px}
+.main{display:grid;grid-template-columns:170px 1fr 220px;gap:7px;margin-top:7px}.nav{padding:6px;display:flex;flex-direction:column;gap:5px}.nav button{padding:11px 9px;text-align:left;color:#c5d4df;background:#10202e;border:1px solid #20384a;border-radius:7px;font-weight:800}.nav button:hover{border-color:#3ca7df}.nav .active{background:#82440d;border-color:#db7c19;color:#fff}
+.warehouse-card{padding:6px}.warehouse{position:relative;min-height:610px;height:100%;overflow:hidden;border:1px solid #45545c;border-radius:5px;background:#202a2f;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:25px 25px;image-rendering:pixelated}
+.floor{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 48px,#10181c 49px 51px);opacity:.65}
+.zone{position:absolute;border:3px solid #697983;background:#263238;border-radius:4px;box-shadow:inset 0 0 0 2px #0006,0 4px 10px #0009;overflow:hidden}
+.zone.blue{border-color:var(--blue);background:#15364c}.zone.green{border-color:var(--green);background:#164332}.zone.yellow{border-color:var(--yellow);background:#4a3a10}.zone.orange{border-color:var(--orange);background:#4b2d16}.zone.purple{border-color:var(--purple);background:#3a2050}.zone.red{border-color:var(--red);background:#4b1d22}
+.zone-title{position:absolute;left:50%;top:5px;transform:translateX(-50%);padding:3px 9px;background:#05090ddd;border:1px solid currentColor;border-radius:3px;font-weight:900;font-size:11px;white-space:nowrap;z-index:3}.blue .zone-title{color:#45b9ff}.green .zone-title{color:#47f19c}.yellow .zone-title{color:#ffda36}.orange .zone-title{color:#ffa15b}.purple .zone-title{color:#d58bff}.red .zone-title{color:#ff7474}
+.box,.person,.truck{position:absolute;font-size:20px;z-index:2;filter:drop-shadow(2px 2px 0 #0009)}.box{animation:box 1.8s steps(2) infinite}.person{animation:person 4s steps(4) infinite}.truck{animation:truck 5s steps(5) infinite}@keyframes box{50%{transform:translateY(-2px)}}@keyframes person{50%{transform:translateX(9px)}}@keyframes truck{50%{transform:translateX(22px)}}
+.conveyor{position:absolute;height:11px;background:#222d33;border:2px solid #75848b;border-radius:2px;box-shadow:inset 0 0 0 2px #0b1013;z-index:1}.cblue{border-color:var(--blue)}.cyellow{border-color:var(--yellow)}.cpurple{border-color:var(--purple)}.cred{border-color:var(--red)}
+.sign{position:absolute;z-index:4;padding:4px 9px;background:#05090df0;border:2px solid currentColor;border-radius:3px;font-size:12px;font-weight:900;box-shadow:2px 2px 0 #0009}
+.side{padding:9px}.side-title{color:#9eb2c2;font-size:10px;margin-bottom:6px}.stat{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff10}.side .barbg{margin:8px 0 13px}
+.bottom{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:7px;margin-top:7px}.panel{padding:10px}.buildbar{display:flex;gap:5px;overflow:auto;margin-top:7px}.builditem{min-width:100px;padding:7px;background:#101f2d;border:1px solid #29465b;border-radius:6px;text-align:center}.builditem span{display:block;font-size:21px}.builditem b{font-size:10px}.builditem strong{display:block;color:var(--yellow);font-size:10px}
+.btn{padding:8px 11px;border-radius:6px;background:#142b3d;color:#e4edf3;border:1px solid #31536a;font-weight:850}.primary{background:#e98721;color:#180d04;border-color:#ffb15c}.greenbtn{background:#125e45;border-color:#27b27e}.danger{background:#67202a;border-color:#a93446}.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.modalbg{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:10px;z-index:20}.modalbg.open{display:flex}.modal{width:min(1000px,100%);max-height:92vh;overflow:auto;padding:12px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.modal h2{margin:0;font-size:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px}.tile{background:#0f1e2b;border:1px solid #29465b;border-radius:7px;padding:10px}.tile b{display:block}.tile strong{display:block;margin-top:7px;color:var(--yellow)}
+.editor{display:grid;grid-template-columns:1fr 250px;gap:9px}.editor-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;background:#060d13;border:1px solid #304757;padding:6px;border-radius:7px;min-height:500px}.cell{min-height:45px;border:1px dashed #263b4a;border-radius:3px;background:#0a141d}.cell.over{background:#16364a;border-color:#35bfff}.block{height:100%;min-height:45px;border:2px solid #697983;border-radius:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:900;cursor:grab;user-select:none}.block.blue{background:#15364c;border-color:var(--blue)}.block.green{background:#164332;border-color:var(--green)}.block.yellow{background:#4a3a10;border-color:var(--yellow)}.block.orange{background:#4b2d16;border-color:var(--orange)}.block.purple{background:#3a2050;border-color:var(--purple)}.block.red{background:#4b1d22;border-color:var(--red)}.palette{display:grid;grid-template-columns:1fr 1fr;gap:6px}.palette-item{padding:9px;background:#101f2d;border:1px solid #29465b;border-radius:6px;text-align:center;cursor:grab}.palette-item:hover{border-color:#35bfff}.editor-help{padding:8px;background:#0a151f;border:1px solid #263e50;border-radius:7px;margin-bottom:8px}.editor-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.toast{position:fixed;right:12px;bottom:12px;background:#102d3e;border:1px solid #347c9c;padding:9px 13px;border-radius:7px;opacity:0;transition:.2s;z-index:30}.toast.show{opacity:1}
+@media(max-width:1000px){.top{grid-template-columns:1fr 1fr}.brand{grid-column:span 2}.main{grid-template-columns:145px 1fr 200px}.gear{display:none}}
+@media(max-width:800px){.main{grid-template-columns:1fr}.nav{display:grid;grid-template-columns:repeat(3,1fr)}.nav button{text-align:center;font-size:10px;padding:8px 2px}.warehouse{min-height:520px}.side{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bottom{grid-template-columns:1fr}.editor{grid-template-columns:1fr}}
+@media(max-width:600px){.app{padding:4px}.top{gap:5px}.card{min-height:55px;padding:7px}.title{font-size:17px}.warehouse{min-height:440px}.side{grid-template-columns:1fr}.editor-grid{grid-template-columns:repeat(5,1fr);min-height:400px}.cell,.block{min-height:55px}}
+</style>
+</head>
+<body>
 <div class="app">
 <div class="top">
-<div class="card brand"><div class="logo">📦</div><div><div class="title">SPT HUB</div><div class="muted">WAREHOUSE SIMULATOR • v0.2 TEST</div></div></div>
-<div class="card test-card"><div class="test-title">🧪 TEST MODE</div><div class="muted">x60 SPEED • 5 MIN SHIFT</div></div>
-<div class="card"><div class="muted">💰 MONEY</div><div class="value orange"><span id="money">1 000 000</span> zł</div></div>
-<div class="card"><div class="muted">⭐ LEVEL <span id="lv">1</span></div><div class="progress"><div class="bar" id="xb"></div></div><div class="muted" id="xt">0 / 1000 XP</div></div>
-<div class="card speed-card"><div class="speed"><div><div class="muted">🕐 SHIFT 06:00–16:00</div><div class="yellow" id="time">--:--</div></div><div><div class="muted">TEST SHIFT</div><div class="green" id="lefttime">5:00</div></div><button onclick="toggleSpeed()" title="Переключить скорость">▶▶</button></div></div>
-<div class="card gear">⚙️</div>
+ <div class="card brand"><div class="logo">📦</div><div><div class="title">SPT HUB</div><div class="muted">WAREHOUSE SIMULATOR • PIXEL</div></div></div>
+ <div class="card test"><b>🧪 TEST MODE</b><div class="muted">x60 SPEED • 5 MIN SHIFT</div></div>
+ <div class="card"><div class="muted">💰 MONEY</div><div class="value orange"><span id="money">1 000 000</span> zł</div></div>
+ <div class="card"><div class="muted">⭐ LEVEL <span id="level">1</span></div><div class="barbg"><div class="bar" id="xpbar"></div></div><div class="muted" id="xptext">0 / 1000 XP</div></div>
+ <div class="card"><div class="speed"><div><div class="muted">🕐 SHIFT 06:00–16:00</div><div class="yellow" id="clock">--:--</div></div><div><div class="muted">TEST SHIFT</div><div class="green" id="shiftleft">5:00</div></div><button onclick="show('⚡ Тест идёт со скоростью x60')">▶▶</button></div></div>
+ <div class="card gear">⚙️</div>
 </div>
+
 <div class="main">
-<div class="nav"><button onclick="openP('warehouse')">🏭 Склад</button><button onclick="openP('equipment')">⚙️ Оборуд.</button><button onclick="openP('build')">🏗️ Строить</button><button onclick="openP('stats')">📊 Статистика</button><button onclick="openP('ranking')">🏆 Рейтинг</button><button onclick="openP('settings')">⚙ Настройки</button></div>
-<div class="card warehouse-wrap"><div class="warehouse" id="wh"></div></div>
-<div class="side"><div><div class="muted">ТЕКУЩАЯ СМЕНА</div><div class="stat">📦 План <b id="target">10000</b></div><div class="stat">📤 Обработано <b id="done">0</b></div><div class="stat">⏳ Осталось <b id="rem">10000</b></div><div class="stat">📈 Прогресс <b id="pct">0%</b></div><div class="progress"><div class="bar" id="sb"></div></div></div>
-<div><div class="muted">СКЛАД</div><div class="stat">⚡ Мощность <b id="cap">1000/ч</b></div><div class="stat">👷 Работники <b id="workers">5</b></div><div class="stat">🏗️ Зоны <b id="zones">1</b></div><div class="stat">📊 Эффект <b id="eff">80%</b></div></div></div>
+ <div class="nav">
+  <button class="active" onclick="openPanel('warehouse')">🏭 Склад</button>
+  <button onclick="openPanel('equipment')">⚙️ Оборуд.</button>
+  <button onclick="openPanel('build')">🏗️ Строить</button>
+  <button onclick="openPanel('stats')">📊 Статистика</button>
+  <button onclick="openPanel('ranking')">🏆 Рейтинг</button>
+  <button onclick="openPanel('settings')">⚙ Настройки</button>
+ </div>
+ <div class="card warehouse-card"><div class="warehouse" id="warehouse"><div class="floor"></div></div></div>
+ <div class="side">
+  <div><div class="side-title">ТЕКУЩАЯ СМЕНА</div><div class="stat">📦 План <b id="target">1000</b></div><div class="stat">📤 Обработано <b id="done">0</b></div><div class="stat">⏳ Осталось <b id="remain">1000</b></div><div class="stat">📈 Прогресс <b id="percent">0%</b></div><div class="barbg"><div class="bar" id="shiftbar"></div></div></div>
+  <div><div class="side-title">СКЛАД</div><div class="stat">⚡ Мощность <b id="capacity">1000/ч</b></div><div class="stat">👷 Работники <b id="workers">5</b></div><div class="stat">🏗️ Зоны <b id="zones">1</b></div><div class="stat">📊 Эффект <b id="effect">81%</b></div></div>
+ </div>
 </div>
+
 <div class="bottom">
-<div class="panel"><b>🏗️ BUILD DOCK</b><div class="buildbar" id="buildbar"></div></div>
-<div class="panel"><b>📦 Склад работает</b><span id="next" style="display:none"></span><p class="muted">Симуляция идёт по реальному времени, но в тесте ускорена в 60 раз. Ты сам решаешь, что покупать и строить.</p><button class="btn primary" onclick="openP('equipment')">Оборудование</button> <button class="btn" onclick="openP('build')">Строить</button></div>
-<div class="panel"><b>🧪 TEST ACTIONS</b><div class="test-actions"><button class="btn greenbtn" onclick="s.m+=1000000;save();render()">+1 000 000 zł</button><button class="btn" onclick="restartTest()">↻ Рестарт</button><button class="btn" onclick="toggleSpeed()">▶ x60</button><button class="btn danger" onclick="resetG()">♻ Новый склад</button></div></div>
+ <div class="panel"><b>🏗️ BUILD DOCK</b><div class="buildbar" id="buildDock"></div></div>
+ <div class="panel"><b>📦 Склад работает</b><p class="muted">В тесте смена ускорена в 60 раз. Покупай оборудование и расширяй собственный HUB.</p><button class="btn primary" onclick="openPanel('equipment')">Оборудование</button> <button class="btn" onclick="openPanel('build')">Строить</button></div>
+ <div class="panel"><b>🧪 TEST ACTIONS</b><div class="actions"><button class="btn greenbtn" onclick="addMoney()">+1 000 000 zł</button><button class="btn" onclick="restart()">↻ Рестарт</button><button class="btn" onclick="show('▶ Скорость x60')">▶ x60</button><button class="btn danger" onclick="newGame()">♻ Новый склад</button></div></div>
 </div>
 </div>
-<div class="modalbg" id="mb"><div class="modal"><div class="head"><h2 id="mt">SPT HUB</h2><button class="btn" onclick="closeP()">✕</button></div><div id="body"></div></div></div><div id="toast" class="toast"></div>
+
+<div class="modalbg" id="modal">
+ <div class="modal">
+  <div class="modal-head"><h2 id="modalTitle">SPT HUB</h2><button class="btn" onclick="closePanel()">✕</button></div>
+  <div id="modalBody"></div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
 <script>
-const K='spt_hub_test_v2';
-const TEST_MODE=true;
-const SIM_SPEED=60;
-const TEST_MONEY=1000000;
-const TEST_SHIFT_MIN=5;
-const E=[
- ['conv2','Conveyor Mk.II','+25% мощность',5000,.25],
- ['pack2','Packing Mk.II','+20% мощность',7500,.20],
- ['sort2','Sorting Mk.II','+25% мощность',10000,.25],
- ['slam2','SLAM Mk.II','+15% мощность',12000,.15],
- ['staff','Staff Upgrade','+3 работника',9000,3],
- ['eff','Process Upgrade','+5% эффективность',11000,5]
+const KEY='spt_hub_final_test_v1';
+const SPEED=60, SHIFT_MS=5*60*1000, START_MONEY=1000000;
+const EQUIPMENT=[
+ {id:'conv',name:'Conveyor Mk.II',price:5000,desc:'+25% мощность',mult:1.25},
+ {id:'pack',name:'Packing Mk.II',price:7500,desc:'+20% мощность',mult:1.20},
+ {id:'sort',name:'Sorting Mk.II',price:10000,desc:'+25% мощность',mult:1.25},
+ {id:'slam',name:'SLAM Mk.II',price:12000,desc:'+15% мощность',mult:1.15},
+ {id:'staff',name:'Staff Upgrade',price:9000,desc:'+3 работника',workers:3},
+ {id:'eff',name:'Process Upgrade',price:11000,desc:'+5% эффективность',effect:5}
 ];
-const Z=[
- ['sorting','SORTING',8000,250],['packing','PACKING',10000,300],['slam','SLAM',15000,400],
- ['dock','INBOUND',12000,250],['staffz','STAFF',7000,0],['maint','MAINTENANCE',14000,0],['control','CONTROL',22000,500]
+const ZONES=[
+ {id:'dock',name:'INBOUND',price:12000,cap:250,color:'blue'},
+ {id:'sorting',name:'SORT',price:8000,cap:250,color:'green'},
+ {id:'packing',name:'PACK',price:10000,cap:300,color:'orange'},
+ {id:'slam',name:'SLAM',price:15000,cap:400,color:'red'},
+ {id:'staff',name:'STAFF',price:7000,cap:0,color:''},
+ {id:'maint',name:'MAINTENANCE',price:14000,cap:0,color:'purple'},
+ {id:'control',name:'CONTROL',price:22000,cap:500,color:'yellow'}
 ];
+const defaultLayout={12:'dock',25:'sorting',28:'packing',46:'control',48:'slam',60:'staff',67:'maint'};
 function fresh(){
- return {testVersion:2,lv:1,xp:0,m:TEST_MONEY,done:0,total:0,best:0,target:1000,e:[],z:['main'],layout:{},start:0,end:0,last:Date.now(),shift:0};
+ return {money:START_MONEY,level:1,xp:0,done:0,total:0,best:0,target:1000,equipment:[],zones:['main'],layout:{...defaultLayout},start:0,end:0,last:Date.now(),shift:0};
 }
+let state=load();
 function load(){
  try{
-   const raw=JSON.parse(localStorage.getItem(K)||'null');
-   return raw&&raw.testVersion===2?Object.assign(fresh(),raw):fresh();
- }catch{return fresh()}
+  const x=JSON.parse(localStorage.getItem(KEY)||'null');
+  return x&&x.version===1?x:Object.assign(fresh(),{version:1});
+ }catch(e){return Object.assign(fresh(),{version:1})}
 }
-let s=load();
-s.testVersion=2;
-const fmt=n=>Math.floor(n).toLocaleString('ru-RU');
-const need=()=>1000+(s.lv-1)*750;
-
-function beginTestShift(){
- const n=Date.now();
- s.start=n;s.end=n+TEST_SHIFT_MIN*60000;s.done=0;s.target=1000+(s.lv-1)*250;s.last=n;s.shift++;
- save(false);
- show('🧪 Новая тестовая смена');
-}
-function shift(){
- const n=Date.now();
- if(!s.start||!s.end||n>=s.end) beginTestShift();
-}
-function cap(){
- let c=1000;
- for(const id of s.z){const q=Z.find(x=>x[0]===id);if(q)c+=q[3]}
- for(const e of E) if(s.e.includes(e[0])&&!['staff','eff'].includes(e[0])) c*=1+e[4];
- return Math.round(c*(1+(s.lv-1)*.03));
-}
-function eff(){return Math.min(100,80+s.e.filter(x=>x==='eff').length*5+s.lv)}
-function tick(){
- shift();
+function save(){state.version=1;localStorage.setItem(KEY,JSON.stringify(state))}
+function money(n){return Math.floor(n).toLocaleString('ru-RU')}
+function xpNeed(){return 1000+(state.level-1)*750}
+function startShift(){
  const now=Date.now();
- const a=Math.max(s.last,s.start), b=Math.min(now,s.end);
- if(b>a){
-   const hours=(b-a)/3600000*SIM_SPEED;
-   const add=cap()*eff()/100*hours;
-   s.done=Math.min(s.target*1.35,s.done+add);
-   s.total+=add;
-   s.m+=add*.55;
-   s.xp+=add*.08;
-   while(s.xp>=need()){
-     s.xp-=need();s.lv++;
-     s.target=1000+(s.lv-1)*250;
-     show('⭐ LEVEL '+s.lv);
-   }
-   s.best=Math.max(s.best,s.done);
+ state.start=now;state.end=now+SHIFT_MS;state.done=0;state.target=1000+(state.level-1)*250;state.last=now;state.shift++;
+ save();
+}
+function capacity(){
+ let c=1000;
+ state.zones.forEach(id=>{const z=ZONES.find(x=>x.id===id);if(z)c+=z.cap});
+ state.equipment.forEach(id=>{const e=EQUIPMENT.find(x=>x.id===id);if(e&&e.mult)c*=e.mult});
+ return Math.round(c*(1+(state.level-1)*.03));
+}
+function efficiency(){return Math.min(100,80+state.level+state.equipment.filter(x=>x==='eff').length*5)}
+function tick(){
+ const now=Date.now();
+ if(!state.start||now>=state.end)startShift();
+ const from=Math.max(state.last,state.start);
+ const to=Math.min(now,state.end);
+ if(to>from){
+  const virtualHours=(to-from)/3600000*SPEED;
+  const amount=capacity()*efficiency()/100*virtualHours;
+  state.done=Math.min(state.target*1.35,state.done+amount);
+  state.total+=amount;state.best=Math.max(state.best,state.done);
+  state.money+=amount*.55;state.xp+=amount*.08;
+  while(state.xp>=xpNeed()){state.xp-=xpNeed();state.level++;state.target=1000+(state.level-1)*250;show('⭐ LEVEL '+state.level)}
  }
- s.last=now;
- save(false);
- render();
-}
-function save(toast=true){
- s.last=Date.now();
- localStorage.setItem(K,JSON.stringify(s));
- if(toast)show('💾 Сохранено');
-}
-function show(t){
- const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');
- clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove('show'),1400);
+ state.last=now;save();render();
 }
 function render(){
- document.getElementById('lv').textContent=s.lv;
- document.getElementById('money').textContent=fmt(s.m);
- document.getElementById('xp').textContent=fmt(s.xp);
- document.getElementById('xb').style.width=Math.min(100,s.xp/need()*100)+'%';
- document.getElementById('xt').textContent=fmt(s.xp)+' / '+fmt(need())+' XP';
- const n=Date.now(),r=Math.max(0,s.end-n);
- document.getElementById('time').textContent=new Date(n).toLocaleTimeString('ru-RU');
- document.getElementById('lefttime').textContent=r?fmt(Math.floor(r/60000))+':'+String(Math.floor((r%60000)/1000)).padStart(2,'0'):'00:00';
- const p=s.target?Math.min(100,s.done/s.target*100):0;
- document.getElementById('target').textContent=fmt(s.target);
- document.getElementById('done').textContent=fmt(s.done);
- document.getElementById('rem').textContent=fmt(Math.max(0,s.target-s.done));
- document.getElementById('pct').textContent=p.toFixed(1)+'%';
- document.getElementById('sb').style.width=p+'%';
- document.getElementById('cap').textContent=fmt(cap())+'/ч';
- document.getElementById('workers').textContent=5+s.z.length+s.e.filter(x=>x==='staff').length*3;
- document.getElementById('zones').textContent=s.z.length;
- document.getElementById('eff').textContent=eff()+'%';
- const q=E.find(e=>!s.e.includes(e[0]));
- const nx=document.getElementById('next');if(nx)nx.innerHTML=q?'<b>'+q[1]+'</b>':'Все улучшения куплены';renderBuildBar();
- draw();
+ const now=Date.now(),left=Math.max(0,state.end-now);
+ setText('level',state.level);setText('money',money(state.money));setText('xptext',money(state.xp)+' / '+money(xpNeed())+' XP');
+ document.getElementById('xpbar').style.width=Math.min(100,state.xp/xpNeed()*100)+'%';
+ setText('clock',new Date(now).toLocaleTimeString('ru-RU'));
+ setText('shiftleft',Math.floor(left/60000)+':'+String(Math.floor(left%60000/1000)).padStart(2,'0'));
+ setText('target',money(state.target));setText('done',money(state.done));setText('remain',money(Math.max(0,state.target-state.done)));
+ const pct=Math.min(100,state.done/state.target*100);setText('percent',pct.toFixed(1)+'%');document.getElementById('shiftbar').style.width=pct+'%';
+ setText('capacity',money(capacity())+'/ч');setText('workers',5+state.equipment.filter(x=>x==='staff').length*3);setText('zones',state.zones.length);setText('effect',efficiency()+'%');
+ renderDock();renderWarehouse();
 }
-function renderBuildBar(){
- const b=document.getElementById('buildbar');if(!b)return;
- const items=[['🚧','Конвейер','5 000'],['🖥️','Рабочая станция','12 000'],['📚','Стеллаж','15 000'],['📡','Сканер','8 000'],['🔀','Сортировщик','25 000'],['▦','Зона','50 000']];
- b.innerHTML=items.map(x=>'<div class="buildtile"><span class="ico">'+x[0]+'</span><b>'+x[1]+'</b><strong>'+x[2]+' zł</strong></div>').join('');
-}
-function draw(){
- const w=document.getElementById('wh');if(!w)return;w.innerHTML='';
- const placed=s.layout||{};
- const hasLayout=Object.keys(placed).length>0;
- const L=[
-  ['main','MAIN',4,6,29,35,''],['dock','INBOUND',5,7,25,28,'blue'],['sorting','SORT',36,7,27,30,'green'],
-  ['packing','PACK',66,7,29,30,'orange'],['slam','SLAM',66,47,29,31,'red'],
-  ['staffz','STAFF',6,54,25,34,''],['maint','MAINTENANCE',36,55,27,33,'purple'],['control','CONTROL',38,35,25,17,'yellow']
- ];
- if(hasLayout){
-   Object.entries(placed).forEach(([cell,id])=>{
-     const z=Z.find(x=>x[0]===id);if(!z)return;
-     const n=Number(cell),col=n%12,row=Math.floor(n/12);
-     const d=document.createElement('div');d.className='zone '+zoneClass(id);
-     d.style='left:'+(col*8.0+1)+'%;top:'+(row*12.5+2)+'%;width:23%;height:20%';
-     d.innerHTML='<span class="zt">'+z[1]+'</span>';
-     for(let i=0;i<3;i++){const b=document.createElement('span');b.className='box';b.textContent='📦';b.style='left:'+(10+i*30)+'%;top:'+(55-(i%2)*20)+'%';d.appendChild(b)}
-     w.appendChild(d);
-   });
- }else{
-   L.forEach(x=>{
-     if(!s.z.includes(x[0]))return;
-     const d=document.createElement('div');d.className='zone '+x[6];
-     d.style='left:'+x[2]+'%;top:'+x[3]+'%;width:'+x[4]+'%;height:'+x[5]+'%';
-     d.innerHTML='<span class="zt">'+x[1]+'</span>';
-     for(let i=0;i<4;i++){const b=document.createElement('span');b.className='box';b.textContent=i%3===0?'📦':'🟫';b.style='left:'+(8+i*25)+'%;top:'+(58-(i%2)*22)+'%';d.appendChild(b)}
-     w.appendChild(d);
-   });
- }
- const cs=[[18,43,50,'bluec'],[42,34,30,'yellowc'],[53,62,36,'purplec'],[66,43,18,'redc'],[26,18,34,'bluec']];
- cs.forEach(c=>{const d=document.createElement('div');d.className='conv '+c[3];d.style='left:'+c[0]+'%;top:'+c[1]+'%;width:'+c[2]+'%';w.appendChild(d)});
- for(let i=0;i<10;i++){const e=document.createElement('span');e.className=i%4===0?'fork':(i%2?'worker':'box');e.textContent=e.className==='fork'?'🚜':e.className==='worker'?'👷':'📦';e.style='left:'+(7+i*9)+'%;top:'+(17+(i*19)%67)+'%';w.appendChild(e)}
- const signs=[['INBOUND','3%','2%','#238fe0'],['STOW','23%','3%','#27e58b'],['PICK','49%','36%','#ffc21a'],['PACK','76%','36%','#ff8b24'],['SORT','48%','67%','#b84cff'],['OUTBOUND','77%','67%','#ff4545']];
- signs.forEach(q=>{const d=document.createElement('div');d.className='mini-sign';d.textContent=q[0];d.style='left:'+q[1]+';top:'+q[2]+';color:'+q[3]+';border-color:'+q[3];w.appendChild(d)});
-}
-
-function buildEditor(){
- const palette=Z.map(z=>'<div class="palette-item" draggable="true" data-zone="'+z[0]+'">🏭<br><b>'+z[1]+'</b><br><span class="muted">'+fmt(z[2])+' zł</span></div>').join('');
- let cells='';
- const placed=s.layout||{};
- for(let i=0;i<72;i++){
-   const id=placed[i]||'';
-   const z=id?Z.find(x=>x[0]===id):null;
-   cells+='<div class="editor-cell" data-cell="'+i+'">'+(z?'<div class="editor-block '+zoneClass(id)+'" draggable="true" data-zone="'+id+'">'+z[1]+'</div>':'')+'</div>';
- }
- return '<div class="editor-help"><div><b>🏗️ Редактор склада</b><div class="muted">Перетаскивай готовые блоки по сетке. Здесь размещается именно твой склад.</div></div><button class="btn primary" onclick="saveLayout()">💾 Сохранить расстановку</button></div><div class="editor-grid" id="editorGrid">'+cells+'</div><div class="palette">'+palette+'</div><div class="editor-actions"><button class="btn" onclick="clearLayout()">🗑 Очистить</button><button class="btn" onclick="autoLayout()">✨ Базовая расстановка</button></div>';
-}
-function zoneClass(id){
- return ({dock:'blue',sorting:'green',packing:'orange',slam:'red',staffz:'',maint:'purple',control:'yellow'}[id]||'');
-}
-function setupEditor(){
- const grid=document.getElementById('editorGrid');if(!grid)return;
- let dragged=null;
- grid.querySelectorAll('.editor-block').forEach(el=>el.addEventListener('dragstart',e=>{dragged=e.currentTarget;e.dataTransfer.setData('text/plain',e.currentTarget.dataset.zone)}));
- grid.querySelectorAll('.editor-cell').forEach(cell=>{
-   cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('over')});
-   cell.addEventListener('dragleave',()=>cell.classList.remove('over'));
-   cell.addEventListener('drop',e=>{
-     e.preventDefault();cell.classList.remove('over');
-     const zone=e.dataTransfer.getData('text/plain');
-     if(!zone)return;
-     const old=grid.querySelector('.editor-block[data-zone="'+zone+'"]');
-     if(old)old.parentElement.innerHTML='';
-     cell.innerHTML='<div class="editor-block '+zoneClass(zone)+'" draggable="true" data-zone="'+zone+'">'+Z.find(x=>x[0]===zone)[1]+'</div>';
-     setupEditor();
-   });
+function setText(id,value){const e=document.getElementById(id);if(e)e.textContent=value}
+function show(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.classList.remove('show'),1400)}
+function addMoney(){state.money+=1000000;save();render();show('💰 +1 000 000 zł')}
+function restart(){state=Object.assign(fresh(),{version:1});startShift();render();show('🔄 Тест перезапущен')}
+function newGame(){if(confirm('Создать новый склад?')){localStorage.removeItem(KEY);location.reload()}}
+function renderDock(){
+ const d=document.getElementById('buildDock');d.innerHTML='';
+ [['🚧','Конвейер','5 000'],['🖥️','Станция','12 000'],['📚','Стеллаж','15 000'],['📡','Сканер','8 000'],['🔀','Сортировщик','25 000'],['▦','Зона','50 000']].forEach(x=>{
+  const e=document.createElement('div');e.className='builditem';e.innerHTML='<span>'+x[0]+'</span><b>'+x[1]+'</b><strong>'+x[2]+' zł</strong>';d.appendChild(e);
  });
- document.querySelectorAll('.palette-item').forEach(el=>el.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',e.currentTarget.dataset.zone)));
 }
-function saveLayout(){
+function zoneClass(id){const z=ZONES.find(x=>x.id===id);return z?z.color:''}
+function renderWarehouse(){
+ const w=document.getElementById('warehouse');w.innerHTML='<div class="floor"></div>';
+ const blocks=[
+  {id:'main',name:'MAIN',x:2,y:4,w:28,h:31,c:''},
+  {id:'dock',name:'INBOUND',x:4,y:8,w:24,h:25,c:'blue'},
+  {id:'sorting',name:'SORT',x:34,y:8,w:28,h:25,c:'green'},
+  {id:'packing',name:'PACK',x:65,y:8,w:30,h:25,c:'orange'},
+  {id:'control',name:'CONTROL',x:36,y:37,w:26,h:15,c:'yellow'},
+  {id:'slam',name:'SLAM',x:65,y:49,w:30,h:31,c:'red'},
+  {id:'staff',name:'STAFF',x:4,y:55,w:25,h:25,c:''},
+  {id:'maint',name:'MAINTENANCE',x:34,y:55,w:28,h:25,c:'purple'}
+ ];
+ const layoutKeys=Object.keys(state.layout);
+ if(layoutKeys.length){
+  layoutKeys.forEach(k=>{
+   const id=state.layout[k];if(!state.zones.includes(id))return;
+   const z=ZONES.find(x=>x.id===id);if(!z)return;
+   const n=Number(k),col=n%10,row=Math.floor(n/10);
+   addZone(w,id,z.name,col*9+1,row*13+2,25,21,z.color);
+  });
+ }else{
+  blocks.forEach(b=>{if(b.id==='main'||state.zones.includes(b.id))addZone(w,b.id,b.name,b.x,b.y,b.w,b.h,b.c)});
+ }
+ const conveyors=[[17,43,55,'cblue'],[42,34,32,'cyellow'],[53,64,38,'cpurple'],[68,44,18,'cred'],[25,19,35,'cblue']];
+ conveyors.forEach(a=>{const e=document.createElement('div');e.className='conveyor '+a[3];e.style.left=a[0]+'%;top:'+a[1]+'%;width:'+a[2]+'%';w.appendChild(e)});
+ for(let i=0;i<12;i++){const e=document.createElement('span');e.className=i%5===0?'truck':i%2?'person':'box';e.textContent=e.className==='truck'?'🚜':e.className==='person'?'👷':'📦';e.style.left=(5+i*8)+'%';e.style.top=(15+(i*17)%70)+'%';w.appendChild(e)}
+ [['INBOUND','3%','2%','#24a9ff'],['STOW','24%','3%','#27e58b'],['PICK','50%','37%','#ffc21b'],['PACK','77%','37%','#ff8a24'],['SORT','49%','68%','#b94dff'],['OUTBOUND','77%','68%','#ff4848']].forEach(a=>{const e=document.createElement('div');e.className='sign';e.textContent=a[0];e.style.left=a[1];e.style.top=a[2];e.style.color=a[3];e.style.borderColor=a[3];w.appendChild(e)});
+}
+function addZone(parent,id,name,x,y,w,h,color){
+ const e=document.createElement('div');e.className='zone '+color;e.style.left=x+'%';e.style.top=y+'%';e.style.width=w+'%';e.style.height=h+'%';
+ e.innerHTML='<div class="zone-title">'+name+'</div>';
+ for(let i=0;i<4;i++){const b=document.createElement('span');b.className='box';b.textContent='📦';b.style.left=(8+i*25)+'%';b.style.top=(58-(i%2)*22)+'%';e.appendChild(b)}
+ parent.appendChild(e);
+}
+function openPanel(name){
+ if(name==='warehouse'){closePanel();return}
+ const title={equipment:'⚙️ Оборудование',build:'🏗️ Редактор склада',stats:'📊 Статистика',ranking:'🏆 Рейтинг',settings:'⚙️ Настройки'}[name]||'SPT HUB';
+ document.getElementById('modalTitle').textContent=title;
+ const body=document.getElementById('modalBody');
+ if(name==='equipment')body.innerHTML=equipmentHTML();
+ if(name==='stats')body.innerHTML='<div class="grid"><div class="tile"><b>Лучший результат</b>'+money(state.best)+' 📦</div><div class="tile"><b>Всего обработано</b>'+money(state.total)+' 📦</div><div class="tile"><b>Уровень</b>'+state.level+'</div><div class="tile"><b>Мощность</b>'+money(capacity())+'/ч</div></div>';
+ if(name==='ranking')body.innerHTML='<div class="tile"><b>🏆 TEST PLAYER</b><br>Level '+state.level+'<br>Warehouse value: '+money(state.money)+' zł</div><p class="muted">Онлайн-рейтинг добавим позже.</p>';
+ if(name==='settings')body.innerHTML='<div class="tile"><b>🧪 TEST MODE</b><p class="muted">5 минут • x60 • стартовые деньги 1 000 000 zł</p><button class="btn greenbtn" onclick="addMoney()">+1 000 000 zł</button> <button class="btn" onclick="restart();openPanel(\'settings\')">↻ Рестарт</button></div>';
+ if(name==='build'){body.innerHTML=editorHTML();setTimeout(initEditor,0)}
+ document.getElementById('modal').classList.add('open');
+}
+function closePanel(){document.getElementById('modal').classList.remove('open')}
+function equipmentHTML(){
+ return '<div class="grid">'+EQUIPMENT.map(e=>'<div class="tile"><b>⚙️ '+e.name+'</b><span class="muted">'+e.desc+'</span><strong>'+money(e.price)+' zł</strong><button class="btn greenbtn" '+(state.equipment.includes(e.id)||state.money<e.price?'disabled':'')+' onclick="buyEquipment(\''+e.id+'\')">'+(state.equipment.includes(e.id)?'Куплено':'Купить')+'</button></div>').join('')+'</div>';
+}
+function buyEquipment(id){
+ const e=EQUIPMENT.find(x=>x.id===id);if(!e||state.equipment.includes(id)||state.money<e.price)return;
+ state.money-=e.price;state.equipment.push(id);save();render();openPanel('equipment');show('⚙️ '+e.name+' куплено');
+}
+function editorHTML(){
+ let cells='';
+ for(let i=0;i<100;i++){
+  const id=state.layout[i]||'';
+  const z=id?ZONES.find(x=>x.id===id):null;
+  cells+='<div class="cell" data-cell="'+i+'">'+(z?'<div class="block '+z.color+'" draggable="true" data-zone="'+id+'">'+z.name+'</div>':'')+'</div>';
+ }
+ const palette=ZONES.map(z=>'<div class="palette-item" draggable="true" data-zone="'+z.id+'">🏭<br><b>'+z.name+'</b><br><span class="muted">'+money(z.price)+' zł</span></div>').join('');
+ return '<div class="editor-help"><b>🏗️ Твой план склада</b><div class="muted">Перетаскивай зоны из правой панели на сетку. Уже размещённый блок можно перетащить в другую клетку.</div></div><div class="editor"><div><div class="editor-grid" id="editorGrid">'+cells+'</div><div class="editor-actions"><button class="btn primary" onclick="saveEditor()">💾 Сохранить</button><button class="btn" onclick="autoLayout()">✨ Авторасстановка</button><button class="btn danger" onclick="clearLayout()">🗑 Очистить</button></div></div><div><b>Доступные зоны</b><div class="palette">'+palette+'</div></div></div>';
+}
+function initEditor(){
  const grid=document.getElementById('editorGrid');if(!grid)return;
- const layout={};
- grid.querySelectorAll('.editor-cell').forEach(cell=>{const b=cell.querySelector('.editor-block');if(b)layout[cell.dataset.cell]=b.dataset.zone});
- s.layout=layout;
- save();show('💾 Расстановка сохранена');
+ grid.querySelectorAll('.block').forEach(b=>b.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',b.dataset.zone)));
+ grid.querySelectorAll('.cell').forEach(cell=>{
+  cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('over')});
+  cell.addEventListener('dragleave',()=>cell.classList.remove('over'));
+  cell.addEventListener('drop',e=>{e.preventDefault();cell.classList.remove('over');placeBlock(cell,e.dataTransfer.getData('text/plain'));});
+ });
+ document.querySelectorAll('.palette-item').forEach(p=>p.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',p.dataset.zone)));
 }
-function clearLayout(){s.layout={};save(false);openP('build')}
-function autoLayout(){
- s.layout={4:'dock',17:'sorting',20:'packing',38:'control',41:'slam',49:'staffz',55:'maint'};
- save(false);openP('build');show('✨ Базовая расстановка готова');
+function placeBlock(cell,id){
+ const z=ZONES.find(x=>x.id===id);if(!z)return;
+ const old=document.querySelector('.block[data-zone="'+id+'"]');if(old)old.parentElement.innerHTML='';
+ cell.innerHTML='<div class="block '+z.color+'" draggable="true" data-zone="'+id+'">'+z.name+'</div>';
+ initEditor();
 }
-function openP(p){
- const title={equipment:'⚙️ Оборудование',build:'🏗️ Строительство',stats:'📊 Статистика',ranking:'🏆 Рейтинг',settings:'⚙️ Настройки'}[p]||'SPT HUB';
- document.getElementById('mt').textContent=title;
- let b='';
- if(p==='equipment')b='<div class="grid">'+E.map(e=>'<div class="tile">⚙️ <b>'+e[1]+'</b><span class="muted">'+e[2]+'</span><strong class="orange">'+fmt(e[3])+' zł</strong><button class="btn greenbtn" '+(s.e.includes(e[0])||s.m<e[3]?'disabled':'')+' onclick="buyE(\''+e[0]+'\')">'+(s.e.includes(e[0])?'Куплено':'Купить')+'</button></div>').join('')+'</div>';
- if(p==='build')b=buildEditor();
- if(p==='stats')b='<div class="grid"><div class="tile"><b>Лучший результат</b>'+fmt(s.best)+' 📦</div><div class="tile"><b>Всего обработано</b>'+fmt(s.total)+' 📦</div><div class="tile"><b>Уровень</b>'+s.lv+'</div><div class="tile"><b>Стоимость склада</b>'+fmt(s.m)+' zł*</div></div><p class="muted">* В тесте баланс условный.</p>';
- if(p==='ranking')b='<p class="muted">Онлайн-рейтинг подключим после локального прототипа. Здесь будут уровень, стоимость склада, мощность и лучший результат смены.</p><div class="tile">🏆 TEST PLAYER — LEVEL '+s.lv+'</div>';
- if(p==='settings')b='<div class="tile"><b>🧪 TEST MODE</b><p class="muted">Смена: '+TEST_SHIFT_MIN+' мин • симуляция: x'+SIM_SPEED+' • старт: '+fmt(TEST_MONEY)+' zł.</p><button class="btn greenbtn" onclick="s.m+=1000000;save();render();openP(\'settings\')">💰 +1 000 000 zł</button><button class="btn" onclick="restartTest();openP(\'settings\')">↻ Рестарт теста</button><button class="btn" onclick="exportSave()">📤 Экспорт сохранения</button><button class="btn danger" onclick="resetG()">♻️ Новый склад</button></div>';
- document.getElementById('body').innerHTML=b;document.getElementById('mb').classList.add('open');if(p==='build')setupEditor();
+function saveEditor(){
+ const layout={};document.querySelectorAll('.cell').forEach(c=>{const b=c.querySelector('.block');if(b)layout[c.dataset.cell]=b.dataset.zone});
+ state.layout=layout;state.zones=['main',...Object.values(layout).filter((x,i,a)=>a.indexOf(x)===i)];save();render();show('💾 План склада сохранён');closePanel();
 }
-function closeP(){document.getElementById('mb').classList.remove('open')}
-function buyE(id){const e=E.find(x=>x[0]===id);if(!e||s.e.includes(id)||s.m<e[3])return;s.m-=e[3];s.e.push(id);save();render();show('⚙️ Улучшение куплено')}
-function buyZ(id){const z=Z.find(x=>x[0]===id);if(!z||s.z.includes(id)||s.m<z[2])return;s.m-=z[2];s.z.push(id);save();render();show('🏗️ Зона построена')}
-function restartTest(){s=Object.assign(fresh(),{testVersion:2});beginTestShift();render()}
-function toggleSpeed(){show('▶ Скорость теста уже x60')}
-function exportSave(){const a=document.createElement('a'),b=new Blob([JSON.stringify(s,null,2)],{type:'application/json'});a.href=URL.createObjectURL(b);a.download='SPT_HUB_TEST_save.json';a.click()}
-function resetG(){if(confirm('Начать новый склад?')){localStorage.removeItem(K);location.reload()}}
-document.getElementById('mb').onclick=e=>{if(e.target.id==='mb')closeP()};
-shift();render();setInterval(tick,1000);setInterval(()=>save(false),10000);
-window.addEventListener('beforeunload',()=>save(false));
-</script></body></html>
+function autoLayout(){state.layout={...defaultLayout};state.zones=['main',...Object.values(defaultLayout)];save();render();openPanel('build');show('✨ Авторасстановка готова')}
+function clearLayout(){state.layout={};state.zones=['main'];save();render();openPanel('build');show('🗑 План очищен')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePanel()});
+if(!state.start)startShift();
+render();
+setInterval(tick,1000);
+setInterval(save,10000);
+window.addEventListener('beforeunload',save);
+</script>
+</body>
+</html>
