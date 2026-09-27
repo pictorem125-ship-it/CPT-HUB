@@ -44,7 +44,16 @@ background-size:24px 24px,24px 24px,100% 20px}
 @media(max-width:1050px){.top{grid-template-columns:1.4fr 1fr 1fr 1fr}.top .speed-card{grid-column:span 2}.gear{display:none}.main{grid-template-columns:150px 1fr 200px}}
 @media(max-width:900px){.top{grid-template-columns:1fr 1fr}.brand{grid-column:1/-1}.main{grid-template-columns:1fr}.nav{display:grid;grid-template-columns:repeat(6,1fr)}.nav button{text-align:center;font-size:10px;padding:8px 3px}.bottom{grid-template-columns:1fr 1fr}.side{display:grid;grid-template-columns:1fr 1fr;gap:8px}}
 @media(max-width:600px){.app{padding:4px}.top{gap:5px}.card{min-height:56px;padding:7px}.title{font-size:17px}.value{font-size:15px}.nav{position:sticky;top:0;z-index:15;grid-template-columns:repeat(3,1fr);padding:4px}.nav button{padding:7px 2px;font-size:10px}.warehouse{aspect-ratio:1/1}.bottom{grid-template-columns:1fr}.side{grid-template-columns:1fr}.box,.worker,.fork{font-size:14px}.zt{font-size:7px;padding:2px 5px}.test-actions{grid-template-columns:1fr 1fr}}
-</style></head><body>
+<style>
+.editor-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;background:#071018;border:1px solid #30495a;padding:6px;border-radius:8px;min-height:420px}
+.editor-cell{min-height:42px;border:1px dashed #263b4a;border-radius:3px;background:#0a141d;position:relative}
+.editor-cell.over{background:#17364a;border-color:#38bfff}
+.editor-block{width:100%;height:100%;min-height:42px;border:2px solid #5d6b73;border-radius:4px;background:#1d2a32;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;font-weight:900;cursor:grab;user-select:none;box-shadow:inset 0 0 0 2px #0005}
+.editor-block:active{cursor:grabbing}
+.editor-block.blue{background:#123b57;border-color:#25a8ff}.editor-block.green{background:#124b36;border-color:#27e58b}.editor-block.yellow{background:#4a3a0d;border-color:#ffc21a}.editor-block.orange{background:#4b2b13;border-color:#ff8b24}.editor-block.purple{background:#3b1952;border-color:#b84cff}.editor-block.red{background:#4d171d;border-color:#ff4545}
+.palette{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-top:8px}.palette-item{padding:8px;background:#101d29;border:1px solid #29465b;border-radius:6px;text-align:center;cursor:grab}.palette-item:hover{border-color:#35c7ff}.editor-help{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px}.editor-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+@media(max-width:600px){.editor-grid{grid-template-columns:repeat(6,1fr);min-height:360px}.editor-cell{min-height:48px}}
+</style></style></head><body>
 <div class="app">
 <div class="top">
 <div class="card brand"><div class="logo">📦</div><div><div class="title">SPT HUB</div><div class="muted">WAREHOUSE SIMULATOR • v0.2 TEST</div></div></div>
@@ -62,7 +71,7 @@ background-size:24px 24px,24px 24px,100% 20px}
 </div>
 <div class="bottom">
 <div class="panel"><b>🏗️ BUILD DOCK</b><div class="buildbar" id="buildbar"></div></div>
-<div class="panel"><b>📦 Склад работает</b><p class="muted">Симуляция идёт по реальному времени, но в тесте ускорена в 60 раз. Ты сам решаешь, что покупать и строить.</p><button class="btn primary" onclick="openP('equipment')">Оборудование</button> <button class="btn" onclick="openP('build')">Строить</button></div>
+<div class="panel"><b>📦 Склад работает</b><span id="next" style="display:none"></span><p class="muted">Симуляция идёт по реальному времени, но в тесте ускорена в 60 раз. Ты сам решаешь, что покупать и строить.</p><button class="btn primary" onclick="openP('equipment')">Оборудование</button> <button class="btn" onclick="openP('build')">Строить</button></div>
 <div class="panel"><b>🧪 TEST ACTIONS</b><div class="test-actions"><button class="btn greenbtn" onclick="s.m+=1000000;save();render()">+1 000 000 zł</button><button class="btn" onclick="restartTest()">↻ Рестарт</button><button class="btn" onclick="toggleSpeed()">▶ x60</button><button class="btn danger" onclick="resetG()">♻ Новый склад</button></div></div>
 </div>
 </div>
@@ -86,7 +95,7 @@ const Z=[
  ['dock','INBOUND',12000,250],['staffz','STAFF',7000,0],['maint','MAINTENANCE',14000,0],['control','CONTROL',22000,500]
 ];
 function fresh(){
- return {lv:1,xp:0,m:TEST_MONEY,done:0,total:0,best:0,target:1000,e:[],z:['main'],start:0,end:0,last:Date.now(),shift:0};
+ return {testVersion:2,lv:1,xp:0,m:TEST_MONEY,done:0,total:0,best:0,target:1000,e:[],z:['main'],layout:{},start:0,end:0,last:Date.now(),shift:0};
 }
 function load(){
  try{
@@ -167,8 +176,7 @@ function render(){
  document.getElementById('zones').textContent=s.z.length;
  document.getElementById('eff').textContent=eff()+'%';
  const q=E.find(e=>!s.e.includes(e[0]));
- document.getElementById('next').innerHTML=q?'<b>'+q[1]+'</b><br>'+q[2]+'<br><button class="btn" onclick="buyE(\''+q[0]+'\')">'+fmt(q[3])+' 💰</button>':'Все улучшения куплены';
- renderBuildBar();
+ const nx=document.getElementById('next');if(nx)nx.innerHTML=q?'<b>'+q[1]+'</b>':'Все улучшения куплены';renderBuildBar();
  draw();
 }
 function renderBuildBar(){
@@ -177,42 +185,96 @@ function renderBuildBar(){
  b.innerHTML=items.map(x=>'<div class="buildtile"><span class="ico">'+x[0]+'</span><b>'+x[1]+'</b><strong>'+x[2]+' zł</strong></div>').join('');
 }
 function draw(){
- const w=document.getElementById('wh');w.innerHTML='';
+ const w=document.getElementById('wh');if(!w)return;w.innerHTML='';
+ const placed=s.layout||{};
+ const hasLayout=Object.keys(placed).length>0;
  const L=[
-  ['main','MAIN',4,6,29,35,''],['dock','INBOUND',5,7,25,28,'blue'],['sorting','SORT',36,7,27,30,'greenz'],
-  ['packing','PACK',66,7,29,30,'orangez'],['slam','SLAM',66,47,29,31,'redz'],
-  ['staffz','STAFF',6,54,25,34,''],['maint','MAINTENANCE',36,55,27,33,'purplez'],['control','CONTROL',38,35,25,17,'yellowz']
+  ['main','MAIN',4,6,29,35,''],['dock','INBOUND',5,7,25,28,'blue'],['sorting','SORT',36,7,27,30,'green'],
+  ['packing','PACK',66,7,29,30,'orange'],['slam','SLAM',66,47,29,31,'red'],
+  ['staffz','STAFF',6,54,25,34,''],['maint','MAINTENANCE',36,55,27,33,'purple'],['control','CONTROL',38,35,25,17,'yellow']
  ];
- L.forEach(x=>{
-  if(!s.z.includes(x[0]))return;
-  const d=document.createElement('div');d.className='zone '+x[6];
-  d.style='left:'+x[2]+'%;top:'+x[3]+'%;width:'+x[4]+'%;height:'+x[5]+'%';
-  d.innerHTML='<span class="zt">'+x[1]+'</span>';
-  for(let i=0;i<4;i++){const b=document.createElement('span');b.className='box';b.textContent=i%3===0?'📦':'🟫';b.style='left:'+(8+i*25)+'%;top:'+(58-(i%2)*22)+'%';d.appendChild(b)}
-  w.appendChild(d);
- });
- const cs=[
-  [18,43,50,'bluec'],[42,34,30,'yellowc'],[53,62,36,'purplec'],[66,43,18,'redc'],[26,18,34,'bluec']
- ];
- cs.forEach(c=>{const d=document.createElement('div');d.className='conv '+c[3];d.style='left:'+c[0]+'%;top:'+c[1]+'%;width:'+c[2]+'%';w.appendChild(d)});
- for(let i=0;i<10;i++){
-  const e=document.createElement('span');e.className=i%4===0?'fork':(i%2?'worker':'box');
-  e.textContent=e.className==='fork'?'🚜':e.className==='worker'?'👷':'📦';
-  e.style='left:'+(7+i*9)+'%;top:'+(17+(i*19)%67)+'%';w.appendChild(e);
+ if(hasLayout){
+   Object.entries(placed).forEach(([cell,id])=>{
+     const z=Z.find(x=>x[0]===id);if(!z)return;
+     const n=Number(cell),col=n%12,row=Math.floor(n/12);
+     const d=document.createElement('div');d.className='zone '+zoneClass(id);
+     d.style='left:'+(col*8.0+1)+'%;top:'+(row*12.5+2)+'%;width:23%;height:20%';
+     d.innerHTML='<span class="zt">'+z[1]+'</span>';
+     for(let i=0;i<3;i++){const b=document.createElement('span');b.className='box';b.textContent='📦';b.style='left:'+(10+i*30)+'%;top:'+(55-(i%2)*20)+'%';d.appendChild(b)}
+     w.appendChild(d);
+   });
+ }else{
+   L.forEach(x=>{
+     if(!s.z.includes(x[0]))return;
+     const d=document.createElement('div');d.className='zone '+x[6];
+     d.style='left:'+x[2]+'%;top:'+x[3]+'%;width:'+x[4]+'%;height:'+x[5]+'%';
+     d.innerHTML='<span class="zt">'+x[1]+'</span>';
+     for(let i=0;i<4;i++){const b=document.createElement('span');b.className='box';b.textContent=i%3===0?'📦':'🟫';b.style='left:'+(8+i*25)+'%;top:'+(58-(i%2)*22)+'%';d.appendChild(b)}
+     w.appendChild(d);
+   });
  }
+ const cs=[[18,43,50,'bluec'],[42,34,30,'yellowc'],[53,62,36,'purplec'],[66,43,18,'redc'],[26,18,34,'bluec']];
+ cs.forEach(c=>{const d=document.createElement('div');d.className='conv '+c[3];d.style='left:'+c[0]+'%;top:'+c[1]+'%;width:'+c[2]+'%';w.appendChild(d)});
+ for(let i=0;i<10;i++){const e=document.createElement('span');e.className=i%4===0?'fork':(i%2?'worker':'box');e.textContent=e.className==='fork'?'🚜':e.className==='worker'?'👷':'📦';e.style='left:'+(7+i*9)+'%;top:'+(17+(i*19)%67)+'%';w.appendChild(e)}
  const signs=[['INBOUND','3%','2%','#238fe0'],['STOW','23%','3%','#27e58b'],['PICK','49%','36%','#ffc21a'],['PACK','76%','36%','#ff8b24'],['SORT','48%','67%','#b84cff'],['OUTBOUND','77%','67%','#ff4545']];
  signs.forEach(q=>{const d=document.createElement('div');d.className='mini-sign';d.textContent=q[0];d.style='left:'+q[1]+';top:'+q[2]+';color:'+q[3]+';border-color:'+q[3];w.appendChild(d)});
+}
+
+function buildEditor(){
+ const palette=Z.map(z=>'<div class="palette-item" draggable="true" data-zone="'+z[0]+'">🏭<br><b>'+z[1]+'</b><br><span class="muted">'+fmt(z[2])+' zł</span></div>').join('');
+ let cells='';
+ const placed=s.layout||{};
+ for(let i=0;i<72;i++){
+   const id=placed[i]||'';
+   const z=id?Z.find(x=>x[0]===id):null;
+   cells+='<div class="editor-cell" data-cell="'+i+'">'+(z?'<div class="editor-block '+zoneClass(id)+'" draggable="true" data-zone="'+id+'">'+z[1]+'</div>':'')+'</div>';
+ }
+ return '<div class="editor-help"><div><b>🏗️ Редактор склада</b><div class="muted">Перетаскивай готовые блоки по сетке. Здесь размещается именно твой склад.</div></div><button class="btn primary" onclick="saveLayout()">💾 Сохранить расстановку</button></div><div class="editor-grid" id="editorGrid">'+cells+'</div><div class="palette">'+palette+'</div><div class="editor-actions"><button class="btn" onclick="clearLayout()">🗑 Очистить</button><button class="btn" onclick="autoLayout()">✨ Базовая расстановка</button></div>';
+}
+function zoneClass(id){
+ return ({dock:'blue',sorting:'green',packing:'orange',slam:'red',staffz:'',maint:'purple',control:'yellow'}[id]||'');
+}
+function setupEditor(){
+ const grid=document.getElementById('editorGrid');if(!grid)return;
+ let dragged=null;
+ grid.querySelectorAll('.editor-block').forEach(el=>el.addEventListener('dragstart',e=>{dragged=e.currentTarget;e.dataTransfer.setData('text/plain',e.currentTarget.dataset.zone)}));
+ grid.querySelectorAll('.editor-cell').forEach(cell=>{
+   cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('over')});
+   cell.addEventListener('dragleave',()=>cell.classList.remove('over'));
+   cell.addEventListener('drop',e=>{
+     e.preventDefault();cell.classList.remove('over');
+     const zone=e.dataTransfer.getData('text/plain');
+     if(!zone)return;
+     const old=grid.querySelector('.editor-block[data-zone="'+zone+'"]');
+     if(old)old.parentElement.innerHTML='';
+     cell.innerHTML='<div class="editor-block '+zoneClass(zone)+'" draggable="true" data-zone="'+zone+'">'+Z.find(x=>x[0]===zone)[1]+'</div>';
+     setupEditor();
+   });
+ });
+ document.querySelectorAll('.palette-item').forEach(el=>el.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',e.currentTarget.dataset.zone)));
+}
+function saveLayout(){
+ const grid=document.getElementById('editorGrid');if(!grid)return;
+ const layout={};
+ grid.querySelectorAll('.editor-cell').forEach(cell=>{const b=cell.querySelector('.editor-block');if(b)layout[cell.dataset.cell]=b.dataset.zone});
+ s.layout=layout;
+ save();show('💾 Расстановка сохранена');
+}
+function clearLayout(){s.layout={};save(false);openP('build')}
+function autoLayout(){
+ s.layout={4:'dock',17:'sorting',20:'packing',38:'control',41:'slam',49:'staffz',55:'maint'};
+ save(false);openP('build');show('✨ Базовая расстановка готова');
 }
 function openP(p){
  const title={equipment:'⚙️ Оборудование',build:'🏗️ Строительство',stats:'📊 Статистика',ranking:'🏆 Рейтинг',settings:'⚙️ Настройки'}[p]||'SPT HUB';
  document.getElementById('mt').textContent=title;
  let b='';
  if(p==='equipment')b='<div class="grid">'+E.map(e=>'<div class="tile">⚙️ <b>'+e[1]+'</b><span class="muted">'+e[2]+'</span><strong class="orange">'+fmt(e[3])+' zł</strong><button class="btn greenbtn" '+(s.e.includes(e[0])||s.m<e[3]?'disabled':'')+' onclick="buyE(\''+e[0]+'\')">'+(s.e.includes(e[0])?'Куплено':'Купить')+'</button></div>').join('')+'</div>';
- if(p==='build')b='<p class="muted">Покупай готовые блоки. Позже редактор позволит переставлять и вращать зоны на сетке.</p><div class="grid">'+Z.map(z=>'<div class="tile">🏭 <b>'+z[1]+'</b><span class="muted">+'+z[3]+' пак./ч</span><strong class="orange">'+fmt(z[2])+' zł</strong><button class="btn primary" '+(s.z.includes(z[0])||s.m<z[2]?'disabled':'')+' onclick="buyZ(\''+z[0]+'\')">'+(s.z.includes(z[0])?'Построено':'Купить + BUILD')+'</button></div>').join('')+'</div>';
+ if(p==='build')b=buildEditor();
  if(p==='stats')b='<div class="grid"><div class="tile"><b>Лучший результат</b>'+fmt(s.best)+' 📦</div><div class="tile"><b>Всего обработано</b>'+fmt(s.total)+' 📦</div><div class="tile"><b>Уровень</b>'+s.lv+'</div><div class="tile"><b>Стоимость склада</b>'+fmt(s.m)+' zł*</div></div><p class="muted">* В тесте баланс условный.</p>';
  if(p==='ranking')b='<p class="muted">Онлайн-рейтинг подключим после локального прототипа. Здесь будут уровень, стоимость склада, мощность и лучший результат смены.</p><div class="tile">🏆 TEST PLAYER — LEVEL '+s.lv+'</div>';
  if(p==='settings')b='<div class="tile"><b>🧪 TEST MODE</b><p class="muted">Смена: '+TEST_SHIFT_MIN+' мин • симуляция: x'+SIM_SPEED+' • старт: '+fmt(TEST_MONEY)+' zł.</p><button class="btn greenbtn" onclick="s.m+=1000000;save();render();openP(\'settings\')">💰 +1 000 000 zł</button><button class="btn" onclick="restartTest();openP(\'settings\')">↻ Рестарт теста</button><button class="btn" onclick="exportSave()">📤 Экспорт сохранения</button><button class="btn danger" onclick="resetG()">♻️ Новый склад</button></div>';
- document.getElementById('body').innerHTML=b;document.getElementById('mb').classList.add('open');
+ document.getElementById('body').innerHTML=b;document.getElementById('mb').classList.add('open');if(p==='build')setupEditor();
 }
 function closeP(){document.getElementById('mb').classList.remove('open')}
 function buyE(id){const e=E.find(x=>x[0]===id);if(!e||s.e.includes(id)||s.m<e[3])return;s.m-=e[3];s.e.push(id);save();render();show('⚙️ Улучшение куплено')}
