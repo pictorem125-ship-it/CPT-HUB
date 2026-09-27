@@ -99,7 +99,7 @@ const ZONES=[
 ];
 const defaultLayout={12:'dock',25:'sorting',28:'packing',46:'control',48:'slam',60:'staff',67:'maint'};
 function fresh(){
- return {money:START_MONEY,level:1,xp:0,done:0,total:0,best:0,target:1000,equipment:[],zones:['main'],layout:{...defaultLayout},start:0,end:0,last:Date.now(),shift:0};
+ return {money:START_MONEY,level:1,xp:0,done:0,total:0,best:0,target:1000,equipment:[],zones:['main','dock','sorting','packing'],layout:{12:'dock',25:'sorting',28:'packing'},start:0,end:0,last:Date.now(),shift:0};
 }
 let state=load();
 function load(){
