@@ -620,5 +620,200 @@ render();
   /* Re-render with the new absolute asset URLs immediately. */
   render();
 })();
+</script><script>
+/* SPT HUB BUILD FIX V4 — click-to-place + real pointer drag + persistent layout */
+(function(){
+  const ASSET_ROOT='https://pictorem125-ship-it.github.io/CPT-HUB/assets/';
+  MODELS.forEach(m=>m.src=ASSET_ROOT+m.src.split('/').pop()+'?v=10');
+
+  let selectedModel=null;
+  let dragModel=null;
+  let dragSource=null;
+
+  const getModel=id=>MODELS.find(m=>m.id===id);
+
+  editorHTML=function(){
+    const cells=[];
+    for(let i=0;i<80;i++){
+      const id=(state.layout||{})[i],m=getModel(id);
+      cells.push('<div class="cell" data-cell="'+i+'">'+(m?
+        '<div class="block" data-model="'+m.id+'"><img src="'+m.src+'" alt="'+m.name+'"></div>':'')+'</div>');
+    }
+    const palette=MODELS.map(m=>
+      '<div class="model-card" data-model="'+m.id+'">'+
+      '<img src="'+m.src+'" alt="'+m.name+'"><b>'+m.name+'</b><small>'+money(m.price)+' zł</small></div>'
+    ).join('');
+    return '<div class="model-hint">🎨 <b>Редактор склада</b> — можно просто выбрать оборудование справа и нажать клетку. Также работает перетаскивание мышью/пальцем.</div>'+
+      '<div class="editor"><div><div class="editor-grid" id="editorGrid">'+cells.join('')+
+      '</div><div class="editor-actions"><button class="btn primary" onclick="saveEditor()">💾 Сохранить расстановку</button><button class="btn danger" onclick="clearLayout()">🗑 Очистить</button></div></div>'+
+      '<div><b>Оборудование</b><div class="model-palette">'+palette+'</div></div></div>';
+  };
+
+  function paintCell(cell,id){
+    const m=getModel(id);
+    if(!m)return;
+    cell.innerHTML='<div class="block" data-model="'+m.id+'"><img src="'+m.src+'" alt="'+m.name+'"></div>';
+  }
+
+  function removeModelAt(cell){
+    if(cell)cell.innerHTML='';
+  }
+
+  function placeSelected(cell){
+    if(!selectedModel)return;
+    paintCell(cell,selectedModel);
+    bind();
+    show('📦 '+getModel(selectedModel).name+' размещён');
+  }
+
+  function moveModel(source, target){
+    if(!source||!target||source===target)return;
+    const id=source.querySelector('.block')?.dataset.model;
+    if(!id)return;
+    paintCell(target,id);
+    removeModelAt(source);
+    bind();
+    show('↔ Оборудование перемещено');
+  }
+
+  function bind(){
+    const grid=document.getElementById('editorGrid');
+    if(!grid)return;
+
+    grid.querySelectorAll('.model-card').forEach(card=>{
+      card.onclick=()=>{
+        selectedModel=card.dataset.model;
+        document.querySelectorAll('.model-card').forEach(x=>x.classList.remove('selected'));
+        card.classList.add('selected');
+        show('Выбрано: '+getModel(selectedModel).name+' — нажми клетку');
+      };
+
+      card.onpointerdown=e=>{
+        if(e.pointerType==='mouse' && e.button!==0)return;
+        dragModel=card.dataset.model;
+        dragSource=null;
+        card.setPointerCapture?.(e.pointerId);
+      };
+      card.onpointerup=e=>{
+        if(dragModel){
+          const el=document.elementFromPoint(e.clientX,e.clientY);
+          const cell=el?.closest?.('.cell');
+          if(cell)placeSelected(cell);
+        }
+        dragModel=null;
+      };
+    });
+
+    grid.querySelectorAll('.cell').forEach(cell=>{
+      cell.onclick=e=>{
+        if(e.target.closest('.block') && !selectedModel)return;
+        if(selectedModel)placeSelected(cell);
+      };
+
+      cell.ondragover=e=>e.preventDefault();
+
+      cell.onpointerenter=e=>{
+        if(dragModel)cell.classList.add('over');
+      };
+      cell.onpointerleave=e=>cell.classList.remove('over');
+
+      cell.onpointerup=e=>{
+        cell.classList.remove('over');
+        if(dragModel){
+          if(dragSource)moveModel(dragSource,cell);
+          else {
+            selectedModel=dragModel;
+            placeSelected(cell);
+          }
+          dragModel=null;
+          dragSource=null;
+        }
+      };
+    });
+
+    grid.querySelectorAll('.block').forEach(block=>{
+      block.onpointerdown=e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        dragModel=block.dataset.model;
+        dragSource=block.parentElement;
+        selectedModel=null;
+      };
+    });
+  }
+
+  initEditor=bind;
+
+  saveEditor=function(){
+    const layout={};
+    document.querySelectorAll('#editorGrid .cell').forEach(cell=>{
+      const b=cell.querySelector('.block');
+      if(b)layout[String(cell.dataset.cell)]=b.dataset.model;
+    });
+    state.layout=layout;
+    save();
+    render();
+    closePanel();
+    show('💾 Расстановка сохранена');
+  };
+
+  clearLayout=function(){
+    state.layout={};
+    save();
+    render();
+    openPanel('build');
+    show('🗑 Расстановка очищена');
+  };
+
+  renderWarehouse=function(){
+    const w=document.getElementById('warehouse');
+    if(!w)return;
+    w.innerHTML=`<div class="refwh">
+      <div class="sky"></div><div class="roof"></div>
+      <div class="roofbeam" style="left:9%"></div><div class="roofbeam" style="left:25%"></div><div class="roofbeam" style="left:42%"></div><div class="roofbeam" style="left:58%"></div><div class="roofbeam" style="left:75%"></div><div class="roofbeam" style="left:91%"></div>
+      <div class="dockrow">${[1,2,3,4,5,6].map(n=>'<div class="dock"><span class="docknum">0'+n+'</span><i class="docklamp"></i></div>').join('')}</div>
+      <div class="facade"></div><div class="logo">SPT <span>HUB</span></div><div class="floor"></div><div class="yellow-frame"></div>
+      <div class="lane" style="left:7%;right:7%;top:29%"></div><div class="lane" style="left:7%;right:7%;top:93%"></div>
+      <div class="lane v" style="left:7%;top:29%;bottom:13%"></div><div class="lane v" style="right:7%;top:29%;bottom:13%"></div>
+      <div class="walk" style="left:5%;top:34%">♙</div><div class="walk" style="left:5%;top:65%">♙</div><div class="walk" style="right:4%;top:42%">♙</div>
+      <div class="safety" style="left:3.2%;top:78%"></div><div class="safety" style="right:3.2%;top:78%"></div>
+      <div class="side left"><div class="machine" style="top:4%"></div><div class="machine" style="top:27%"></div><div class="machine" style="top:51%"></div><div class="machine" style="top:75%"></div></div>
+      <div class="side right"><div class="machine" style="top:4%"></div><div class="machine" style="top:27%"></div><div class="machine" style="top:51%"></div><div class="machine" style="top:75%"></div></div>
+      <div class="lightbar" style="left:20%;top:29%"></div><div class="lightbar" style="left:37%;top:29%"></div><div class="lightbar" style="left:54%;top:29%"></div><div class="lightbar" style="left:71%;top:29%"></div><div class="lightbar" style="left:88%;top:29%"></div>
+      <div class="bottom"><div class="roomrow"><div class="room"><span class="roomtag">STAFF</span></div><div class="room"><span class="roomtag">OFFICE</span></div><div class="room"><span class="roomtag">CONTROL</span></div><div class="room"><span class="roomtag">MAINT</span></div><div class="room"><span class="roomtag">STORAGE</span></div></div><div class="bottomdoor"></div></div>
+      <div class="label">SPT HUB • BUILD FLOOR<small>Размещай оборудование только внутри рабочей зоны</small></div>
+      <div class="build-layer"><div class="build-grid-live" id="liveBuildGrid"></div></div>
+    </div>`;
+
+    const grid=document.getElementById('liveBuildGrid');
+    const layout=state.layout||{};
+    for(let i=0;i<80;i++){
+      const slot=document.createElement('div');
+      slot.className='live-model';
+      const m=getModel(layout[i]);
+      if(m){
+        const img=document.createElement('img');
+        img.src=m.src;
+        img.alt=m.name;
+        slot.appendChild(img);
+      }
+      grid.appendChild(slot);
+    }
+  };
+
+  const css=document.createElement('style');
+  css.textContent=`
+    .model-card{touch-action:none;user-select:none}
+    .model-card.selected{border-color:#27e58b!important;box-shadow:0 0 0 2px #27e58b55}
+    #editorGrid .cell{touch-action:none;user-select:none}
+    #editorGrid .block{width:100%;height:100%;touch-action:none;cursor:grab}
+    #editorGrid .block img,.model-card img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;pointer-events:none}
+    .model-card img{height:70px}
+    #editorGrid .cell.over{background:#16445a!important;border-color:#35c8ff!important}
+  `;
+  document.head.appendChild(css);
+
+  render();
+})();
 </script></body>
 </html>
