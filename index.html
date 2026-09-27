@@ -104,6 +104,8 @@ opacity:.8}
 .refwh .label{position:absolute;left:50%;top:53%;transform:translate(-50%,-50%);z-index:9;padding:7px 14px;background:#101a1ee8;border:2px dashed #e2aa22;color:#ffd66d;font-size:11px;font-weight:900;text-align:center;letter-spacing:.4px;box-shadow:3px 3px 0 #0008}
 .refwh .label small{display:block;color:#b9c1c4;font-size:8px;margin-top:3px;font-weight:700}
 @media(max-width:600px){.refwh .logo{font-size:11px;padding:4px 8px}.refwh .docknum{font-size:7px;padding:1px 4px}.refwh .walk{font-size:19px}.refwh .forklift{font-size:21px}.refwh .label{font-size:9px;padding:5px 8px}}
+</style><style id="model-assets-style">
+.model-palette{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.model-card{background:#0c1720;border:1px solid #29495c;border-radius:7px;padding:7px;text-align:center;cursor:grab}.model-card:hover{border-color:#2bbcff;transform:translateY(-1px)}.model-card img{width:100%;height:70px;object-fit:contain;image-rendering:pixelated;background:#071017;border-radius:4px}.model-card b{display:block;font-size:10px;margin-top:4px}.model-card small{color:#ffbd2e}.placed-model{position:absolute;z-index:12;transform:translate(-50%,-50%);cursor:grab;touch-action:none}.placed-model img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(3px 4px 2px #0009)}.placed-model.selected{outline:2px solid #28c7ff;outline-offset:3px}.model-hint{padding:8px;background:#0b1720;border:1px solid #29495c;border-radius:7px;margin-bottom:8px;color:#b9c9d3;font-size:11px}
 </style></head>
 <body>
 <div class="app">
@@ -167,7 +169,16 @@ const ZONES=[
  {id:'maint',name:'MAINTENANCE',price:14000,cap:0,color:'purple'},
  {id:'control',name:'CONTROL',price:22000,cap:500,color:'yellow'}
 ];
-const defaultLayout={12:'dock',25:'sorting',28:'packing',46:'control',48:'slam',60:'staff',67:'maint'};
+const defaultLayout={};
+const MODELS=[
+ {id:'conveyor',name:'Конвейер',price:1000,src:'assets/conveyor.svg',w:18,h:9},
+ {id:'packing',name:'Pack Station',price:3000,src:'assets/packing_station.svg',w:13,h:14},
+ {id:'sorting',name:'Sorter Module',price:4000,src:'assets/sorting_module.svg',w:14,h:14},
+ {id:'slam',name:'SLAM Station',price:3500,src:'assets/slam_station.svg',w:13,h:14},
+ {id:'rack',name:'Стеллаж',price:1800,src:'assets/rack_large.svg',w:10,h:18},
+ {id:'forklift',name:'Погрузчик',price:2000,src:'assets/forklift.svg',w:12,h:10}
+];
+
 function fresh(){
  return {money:START_MONEY,level:1,xp:0,done:0,total:0,best:0,target:1000,equipment:[],zones:['main'],layout:{},start:0,end:0,last:Date.now(),shift:0};
 }
@@ -225,10 +236,8 @@ function addMoney(){state.money+=1000000;save();render();show('💰 +1 000 000 z
 function restart(){state=Object.assign(fresh(),{version:1});startShift();render();show('🔄 Тест перезапущен')}
 function newGame(){if(confirm('Создать новый склад?')){localStorage.removeItem(KEY);location.reload()}}
 function renderDock(){
- const d=document.getElementById('buildDock');d.innerHTML='';
- [['🚧','Конвейер','5 000'],['🖥️','Станция','12 000'],['📚','Стеллаж','15 000'],['📡','Сканер','8 000'],['🔀','Сортировщик','25 000'],['▦','Зона','50 000']].forEach(x=>{
-  const e=document.createElement('div');e.className='builditem';e.innerHTML='<span>'+x[0]+'</span><b>'+x[1]+'</b><strong>'+x[2]+' zł</strong>';d.appendChild(e);
- });
+ const d=document.getElementById('buildDock');if(!d)return;d.innerHTML='';
+ MODELS.forEach(m=>{const e=document.createElement('div');e.className='builditem';e.innerHTML='<img src="'+m.src+'" style="width:80px;height:52px;object-fit:contain;image-rendering:pixelated"><b>'+m.name+'</b><strong>'+money(m.price)+' zł</strong>';d.appendChild(e)});
 }
 function zoneClass(id){const z=ZONES.find(x=>x.id===id);return z?z.color:''}
 function renderWarehouse(){
@@ -260,6 +269,8 @@ function renderWarehouse(){
   </div>
   <div class="label">EMPTY HUB • BUILD AREA<small>Свободная площадь — здесь будет твой склад</small></div>
  </div>`;
+ const modelsLayer=document.createElement('div');modelsLayer.style.position='absolute';modelsLayer.style.inset='0';modelsLayer.style.zIndex='20';
+ Object.entries(state.layout||{}).forEach(([cell,id])=>{const m=MODELS.find(x=>x.id===id);if(!m)return;const n=Number(cell),col=n%10,row=Math.floor(n/10);const e=document.createElement('div');e.className='placed-model';e.style.left=(12+col*8.4)+'%';e.style.top=(34+row*6.2)+'%';e.style.width=m.w+'%';e.style.height=m.h+'%';e.innerHTML='<img src="'+m.src+'" alt="'+m.name+'">';modelsLayer.appendChild(e)});w.appendChild(modelsLayer);
 }
 function addZone(parent,id,name,x,y,w,h,color){
  const e=document.createElement('div');e.className='zone '+color;e.style.left=x+'%';e.style.top=y+'%';e.style.width=w+'%';e.style.height=h+'%';
@@ -288,15 +299,37 @@ function buyEquipment(id){
  state.money-=e.price;state.equipment.push(id);save();render();openPanel('equipment');show('⚙️ '+e.name+' куплено');
 }
 function editorHTML(){
- let cells='';
+ const cells=[];
  for(let i=0;i<100;i++){
   const id=state.layout[i]||'';
-  const z=id?ZONES.find(x=>x.id===id):null;
-  cells+='<div class="cell" data-cell="'+i+'">'+(z?'<div class="block '+z.color+'" draggable="true" data-zone="'+id+'">'+z.name+'</div>':'')+'</div>';
+  const m=id?MODELS.find(x=>x.id===id):null;
+  cells.push('<div class="cell" data-cell="'+i+'">'+(m?'<div class="block" draggable="true" data-model="'+m.id+'"><img src="'+m.src+'" alt="'+m.name+'"></div>':'')+'</div>');
  }
- const palette=ZONES.map(z=>'<div class="palette-item" draggable="true" data-zone="'+z.id+'">🏭<br><b>'+z.name+'</b><br><span class="muted">'+money(z.price)+' zł</span></div>').join('');
- return '<div class="editor-help"><b>🏗️ Твой план склада</b><div class="muted">Перетаскивай зоны из правой панели на сетку. Уже размещённый блок можно перетащить в другую клетку.</div></div><div class="editor"><div><div class="editor-grid" id="editorGrid">'+cells+'</div><div class="editor-actions"><button class="btn primary" onclick="saveEditor()">💾 Сохранить</button><button class="btn" onclick="autoLayout()">✨ Авторасстановка</button><button class="btn danger" onclick="clearLayout()">🗑 Очистить</button></div></div><div><b>Доступные зоны</b><div class="palette">'+palette+'</div></div></div>';
+ const palette=MODELS.map(m=>'<div class="model-card" draggable="true" data-model="'+m.id+'"><img src="'+m.src+'" alt=""><b>'+m.name+'</b><small>'+money(m.price)+' zł</small></div>').join('');
+ return '<div class="model-hint">🎨 <b>Готовые 2D-модели</b> — это реальные SVG-ассеты, а не CSS-фигуры. Перетащи оборудование на клетку склада. Поворот можно добавить следующим шагом.</div><div class="editor"><div><div class="editor-grid" id="editorGrid">'+cells.join('')+'</div><div class="editor-actions"><button class="btn primary" onclick="saveEditor()">💾 Сохранить</button><button class="btn danger" onclick="clearLayout()">🗑 Очистить</button></div></div><div><b>Оборудование</b><div class="model-palette">'+palette+'</div></div></div>';
 }
+function initEditor(){
+ const grid=document.getElementById('editorGrid');if(!grid)return;
+ grid.querySelectorAll('.block').forEach(b=>b.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',b.dataset.model)));
+ grid.querySelectorAll('.cell').forEach(cell=>{
+  cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('over')});
+  cell.addEventListener('dragleave',()=>cell.classList.remove('over'));
+  cell.addEventListener('drop',e=>{e.preventDefault();cell.classList.remove('over');placeModel(cell,e.dataTransfer.getData('text/plain'));});
+ });
+ document.querySelectorAll('.model-card').forEach(p=>p.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',p.dataset.model)));
+}
+function placeModel(cell,id){
+ const m=MODELS.find(x=>x.id===id);if(!m)return;
+ const old=document.querySelector('.block[data-model="'+id+'"]');if(old)old.parentElement.innerHTML='';
+ cell.innerHTML='<div class="block" draggable="true" data-model="'+id+'"><img src="'+m.src+'" alt="'+m.name+'"></div>';
+ initEditor();
+}
+function saveEditor(){
+ const layout={};document.querySelectorAll('.cell').forEach(c=>{const b=c.querySelector('.block');if(b)layout[c.dataset.cell]=b.dataset.model});
+ state.layout=layout;save();render();show('💾 Модели размещены на складе');closePanel();
+}
+function clearLayout(){state.layout={};save();render();openPanel('build');show('🗑 Оборудование убрано')}
+
 function initEditor(){
  const grid=document.getElementById('editorGrid');if(!grid)return;
  grid.querySelectorAll('.block').forEach(b=>b.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',b.dataset.zone)));
