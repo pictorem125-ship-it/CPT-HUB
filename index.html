@@ -167,7 +167,7 @@ function render(){
  document.getElementById('zones').textContent=s.z.length;
  document.getElementById('eff').textContent=eff()+'%';
  const q=E.find(e=>!s.e.includes(e[0]));
- document.getElementById('next').innerHTML=q?'<b>'+q[1]+'</b><br>'+q[2]+'<br><button class="btn" onclick="buyE(\\''+q[0]+'\\')">'+fmt(q[3])+' 💰</button>':'Все улучшения куплены';
+ document.getElementById('next').innerHTML=q?'<b>'+q[1]+'</b><br>'+q[2]+'<br><button class="btn" onclick="buyE(\''+q[0]+'\')">'+fmt(q[3])+' 💰</button>':'Все улучшения куплены';
  renderBuildBar();
  draw();
 }
@@ -207,11 +207,11 @@ function openP(p){
  const title={equipment:'⚙️ Оборудование',build:'🏗️ Строительство',stats:'📊 Статистика',ranking:'🏆 Рейтинг',settings:'⚙️ Настройки'}[p]||'SPT HUB';
  document.getElementById('mt').textContent=title;
  let b='';
- if(p==='equipment')b='<div class="grid">'+E.map(e=>'<div class="tile">⚙️ <b>'+e[1]+'</b><span class="muted">'+e[2]+'</span><strong class="orange">'+fmt(e[3])+' zł</strong><button class="btn greenbtn" '+(s.e.includes(e[0])||s.m<e[3]?'disabled':'')+' onclick="buyE(\\''+e[0]+'\\')">'+(s.e.includes(e[0])?'Куплено':'Купить')+'</button></div>').join('')+'</div>';
- if(p==='build')b='<p class="muted">Покупай готовые блоки. Позже редактор позволит переставлять и вращать зоны на сетке.</p><div class="grid">'+Z.map(z=>'<div class="tile">🏭 <b>'+z[1]+'</b><span class="muted">+'+z[3]+' пак./ч</span><strong class="orange">'+fmt(z[2])+' zł</strong><button class="btn primary" '+(s.z.includes(z[0])||s.m<z[2]?'disabled':'')+' onclick="buyZ(\\''+z[0]+'\\')">'+(s.z.includes(z[0])?'Построено':'Купить + BUILD')+'</button></div>').join('')+'</div>';
+ if(p==='equipment')b='<div class="grid">'+E.map(e=>'<div class="tile">⚙️ <b>'+e[1]+'</b><span class="muted">'+e[2]+'</span><strong class="orange">'+fmt(e[3])+' zł</strong><button class="btn greenbtn" '+(s.e.includes(e[0])||s.m<e[3]?'disabled':'')+' onclick="buyE(\''+e[0]+'\')">'+(s.e.includes(e[0])?'Куплено':'Купить')+'</button></div>').join('')+'</div>';
+ if(p==='build')b='<p class="muted">Покупай готовые блоки. Позже редактор позволит переставлять и вращать зоны на сетке.</p><div class="grid">'+Z.map(z=>'<div class="tile">🏭 <b>'+z[1]+'</b><span class="muted">+'+z[3]+' пак./ч</span><strong class="orange">'+fmt(z[2])+' zł</strong><button class="btn primary" '+(s.z.includes(z[0])||s.m<z[2]?'disabled':'')+' onclick="buyZ(\''+z[0]+'\')">'+(s.z.includes(z[0])?'Построено':'Купить + BUILD')+'</button></div>').join('')+'</div>';
  if(p==='stats')b='<div class="grid"><div class="tile"><b>Лучший результат</b>'+fmt(s.best)+' 📦</div><div class="tile"><b>Всего обработано</b>'+fmt(s.total)+' 📦</div><div class="tile"><b>Уровень</b>'+s.lv+'</div><div class="tile"><b>Стоимость склада</b>'+fmt(s.m)+' zł*</div></div><p class="muted">* В тесте баланс условный.</p>';
  if(p==='ranking')b='<p class="muted">Онлайн-рейтинг подключим после локального прототипа. Здесь будут уровень, стоимость склада, мощность и лучший результат смены.</p><div class="tile">🏆 TEST PLAYER — LEVEL '+s.lv+'</div>';
- if(p==='settings')b='<div class="tile"><b>🧪 TEST MODE</b><p class="muted">Смена: '+TEST_SHIFT_MIN+' мин • симуляция: x'+SIM_SPEED+' • старт: '+fmt(TEST_MONEY)+' zł.</p><button class="btn greenbtn" onclick="s.m+=1000000;save();render();openP(\\'settings\\')">💰 +1 000 000 zł</button><button class="btn" onclick="restartTest();openP(\\'settings\\')">↻ Рестарт теста</button><button class="btn" onclick="exportSave()">📤 Экспорт сохранения</button><button class="btn danger" onclick="resetG()">♻️ Новый склад</button></div>';
+ if(p==='settings')b='<div class="tile"><b>🧪 TEST MODE</b><p class="muted">Смена: '+TEST_SHIFT_MIN+' мин • симуляция: x'+SIM_SPEED+' • старт: '+fmt(TEST_MONEY)+' zł.</p><button class="btn greenbtn" onclick="s.m+=1000000;save();render();openP(\'settings\')">💰 +1 000 000 zł</button><button class="btn" onclick="restartTest();openP(\'settings\')">↻ Рестарт теста</button><button class="btn" onclick="exportSave()">📤 Экспорт сохранения</button><button class="btn danger" onclick="resetG()">♻️ Новый склад</button></div>';
  document.getElementById('body').innerHTML=b;document.getElementById('mb').classList.add('open');
 }
 function closeP(){document.getElementById('mb').classList.remove('open')}
