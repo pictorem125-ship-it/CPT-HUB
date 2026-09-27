@@ -815,5 +815,135 @@ render();
 
   render();
 })();
+</script><script>
+/* SPT HUB ASSET PACK V5 — reference models from uploaded screenshots */
+(function(){
+  const ATLAS='https://pictorem125-ship-it.github.io/CPT-HUB/assets/spt_models_atlas.webp?v=1';
+  const defs=[
+    ['inbound','Inbound',5000],['sortzone','Sort',5000],['packzone','Pack',5000],['slamzone','SLAM',5000],
+    ['staffzone','Staff',3500],['controlzone','Control',4000],['maintzone','Maintenance',4000],
+    ['conveyor','Конвейер прямой',1000],['turn','Конвейер угол 90°',800],['splitter','Конвейер сплиттер',1500],
+    ['merge','Конвейер мердж',1500],['lift','Конвейер подъём',2000],
+    ['rack_small','Стеллаж малый',800],['rack_medium','Стеллаж средний',1200],['rack_large','Стеллаж большой',1800],
+    ['pallets_empty','Паллеты пустые',200],['pallets_box','Паллеты коробки',300],['cage','Клетка',400],
+    ['container','Контейнер',400],['tote','Тот (TS)',400],
+    ['forklift','Погрузчик',2000],['pallet_jack','Тележка',500],['box','Картонная коробка',200],['bin','Бин',200],
+    ['cone','Конус',100],['barrier','Барьер',200],['table','Стол',300],['camera','Камера',200]
+  ];
+  MODELS=defs.map((d,i)=>({id:d[0],name:d[1],price:d[2],src:ATLAS,col:i%8,row:Math.floor(i/8)}));
+
+  const getModel=id=>MODELS.find(m=>m.id===id);
+  const spriteStyle=m=>'background-image:url("'+m.src+'");background-position:-'+(m.col*128)+'px -'+(m.row*128)+'px;';
+  const sprite=m=>'<span class="atlas-sprite" style="'+spriteStyle(m)+'"></span>';
+
+  editorHTML=function(){
+    let cells='';
+    for(let i=0;i<80;i++){
+      const m=getModel((state.layout||{})[i]);
+      cells+='<div class="cell" data-cell="'+i+'">'+(m?'<div class="block" data-model="'+m.id+'">'+sprite(m)+'</div>':'')+'</div>';
+    }
+    const palette=MODELS.map(m=>'<div class="model-card" data-model="'+m.id+'">'+sprite(m)+'<b>'+m.name+'</b><small>'+money(m.price)+' zł</small></div>').join('');
+    return '<div class="model-hint">🎨 <b>Модели из референса</b> — нажми на объект справа, затем на клетку. Можно ставить одинаковые модели несколько раз.</div>'+
+      '<div class="editor"><div><div class="editor-grid" id="editorGrid">'+cells+'</div>'+
+      '<div class="editor-actions"><button class="btn primary" onclick="saveEditor()">💾 Сохранить расстановку</button><button class="btn danger" onclick="clearLayout()">🗑 Очистить</button></div></div>'+
+      '<div><b>Модели</b><div class="model-palette">'+palette+'</div></div></div>';
+  };
+
+  let selectedModel=null, dragModel=null, dragSource=null;
+
+  function paint(cell,id){
+    const m=getModel(id); if(!m)return;
+    cell.innerHTML='<div class="block" data-model="'+m.id+'">'+sprite(m)+'</div>';
+  }
+  function bindEditor(){
+    const grid=document.getElementById('editorGrid'); if(!grid)return;
+    grid.querySelectorAll('.model-card').forEach(card=>{
+      card.onclick=()=>{
+        selectedModel=card.dataset.model;
+        grid.querySelectorAll('.model-card').forEach(x=>x.classList.remove('selected'));
+        card.classList.add('selected');
+        show('Выбрано: '+getModel(selectedModel).name+' — нажми клетку');
+      };
+    });
+    grid.querySelectorAll('.cell').forEach(cell=>{
+      cell.onclick=()=>{
+        if(selectedModel){ paint(cell,selectedModel); bindEditor(); }
+      };
+      cell.ondragover=e=>e.preventDefault();
+      cell.onpointerenter=()=>{if(dragModel)cell.classList.add('over')};
+      cell.onpointerleave=()=>cell.classList.remove('over');
+      cell.onpointerup=()=>{
+        cell.classList.remove('over');
+        if(dragModel){
+          const id=dragModel;
+          if(dragSource && dragSource!==cell) dragSource.innerHTML='';
+          paint(cell,id);
+          dragModel=null; dragSource=null; bindEditor();
+        }
+      };
+    });
+    grid.querySelectorAll('.block').forEach(block=>{
+      block.onpointerdown=e=>{
+        e.preventDefault(); e.stopPropagation();
+        dragModel=block.dataset.model; dragSource=block.parentElement; selectedModel=null;
+      };
+    });
+  }
+  initEditor=bindEditor;
+
+  saveEditor=function(){
+    const layout={};
+    document.querySelectorAll('#editorGrid .cell').forEach(c=>{
+      const b=c.querySelector('.block'); if(b)layout[c.dataset.cell]=b.dataset.model;
+    });
+    state.layout=layout; save(); render(); closePanel(); show('💾 Расстановка сохранена');
+  };
+  clearLayout=function(){
+    state.layout={}; save(); render(); openPanel('build'); show('🗑 Расстановка очищена');
+  };
+
+  renderWarehouse=function(){
+    const w=document.getElementById('warehouse'); if(!w)return;
+    w.innerHTML=`<div class="refwh">
+      <div class="sky"></div><div class="roof"></div>
+      <div class="roofbeam" style="left:9%"></div><div class="roofbeam" style="left:25%"></div><div class="roofbeam" style="left:42%"></div><div class="roofbeam" style="left:58%"></div><div class="roofbeam" style="left:75%"></div><div class="roofbeam" style="left:91%"></div>
+      <div class="dockrow">${[1,2,3,4,5,6].map(n=>'<div class="dock"><span class="docknum">0'+n+'</span><i class="docklamp"></i></div>').join('')}</div>
+      <div class="facade"></div><div class="logo">SPT <span>HUB</span></div><div class="floor"></div><div class="yellow-frame"></div>
+      <div class="lane" style="left:7%;right:7%;top:29%"></div><div class="lane" style="left:7%;right:7%;top:93%"></div>
+      <div class="lane v" style="left:7%;top:29%;bottom:13%"></div><div class="lane v" style="right:7%;top:29%;bottom:13%"></div>
+      <div class="walk" style="left:5%;top:34%">♙</div><div class="walk" style="left:5%;top:65%">♙</div><div class="walk" style="right:4%;top:42%">♙</div>
+      <div class="safety" style="left:3.2%;top:78%"></div><div class="safety" style="right:3.2%;top:78%"></div>
+      <div class="side left"><div class="machine" style="top:4%"></div><div class="machine" style="top:27%"></div><div class="machine" style="top:51%"></div><div class="machine" style="top:75%"></div></div>
+      <div class="side right"><div class="machine" style="top:4%"></div><div class="machine" style="top:27%"></div><div class="machine" style="top:51%"></div><div class="machine" style="top:75%"></div></div>
+      <div class="lightbar" style="left:20%;top:29%"></div><div class="lightbar" style="left:37%;top:29%"></div><div class="lightbar" style="left:54%;top:29%"></div><div class="lightbar" style="left:71%;top:29%"></div><div class="lightbar" style="left:88%;top:29%"></div>
+      <div class="bottom"><div class="roomrow"><div class="room"><span class="roomtag">STAFF</span></div><div class="room"><span class="roomtag">OFFICE</span></div><div class="room"><span class="roomtag">CONTROL</span></div><div class="room"><span class="roomtag">MAINT</span></div><div class="room"><span class="roomtag">STORAGE</span></div></div><div class="bottomdoor"></div></div>
+      <div class="label">SPT HUB • BUILD FLOOR<small>Размещай оборудование только внутри рабочей зоны</small></div>
+      <div class="build-layer"><div class="build-grid-live" id="liveBuildGrid"></div></div>
+    </div>`;
+    const grid=document.getElementById('liveBuildGrid'), layout=state.layout||{};
+    for(let i=0;i<80;i++){
+      const slot=document.createElement('div'); slot.className='live-model';
+      const m=getModel(layout[i]); if(m)slot.innerHTML=sprite(m);
+      grid.appendChild(slot);
+    }
+  };
+
+  const s=document.createElement('style');
+  s.textContent=`
+    .atlas-sprite{display:block;width:128px;height:128px;flex:0 0 128px;background-repeat:no-repeat;background-size:1024px 512px;image-rendering:pixelated;transform-origin:center}
+    .model-card .atlas-sprite{width:86px;height:86px;flex-basis:86px;background-size:688px 344px;transform:scale(.67)}
+    .model-card{height:150px;overflow:hidden;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;touch-action:none}
+    .model-card.selected{border-color:#27e58b!important;box-shadow:0 0 0 2px #27e58b55}
+    #editorGrid .block{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    #editorGrid .block .atlas-sprite{transform:scale(.62)}
+    #liveBuildGrid .live-model{overflow:hidden}
+    #liveBuildGrid .live-model .atlas-sprite{transform:scale(.72)}
+    #editorGrid .cell{touch-action:none}
+    #editorGrid .cell.over{background:#16445a!important;border-color:#35c8ff!important}
+    .model-palette{grid-template-columns:repeat(3,1fr)!important}
+  `;
+  document.head.appendChild(s);
+  render();
+})();
 </script></body>
 </html>
